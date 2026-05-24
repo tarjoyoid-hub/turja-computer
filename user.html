@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard User</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</head>
+
+<body class="bg-slate-100">
+
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <div class="w-72 bg-slate-900 text-white p-5">
+
+    <h1 class="text-2xl font-bold mb-8">
+      Dashboard User
+    </h1>
+
+    <div class="space-y-3">
+
+      <button
+        onclick="showMenu('buatVoucher')"
+        class="w-full text-left bg-green-600 hover:bg-green-700 p-3 rounded-xl"
+      >
+        Buat Voucher
+      </button>
+
+      <button
+        onclick="showMenu('daftarVoucher')"
+        class="w-full text-left bg-slate-700 hover:bg-slate-600 p-3 rounded-xl"
+      >
+        Daftar Voucher
+      </button>
+
+      <button
+        onclick="showMenu('dataPenjualan')"
+        class="w-full text-left bg-slate-700 hover:bg-slate-600 p-3 rounded-xl"
+      >
+        Data Penjualan
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 p-8">
+
+    <!-- Buat Voucher -->
+    <div id="buatVoucherMenu">
+
+      <h2 class="text-3xl font-bold mb-6">
+        Buat Voucher
+      </h2>
+
+      <div class="bg-white p-6 rounded-2xl shadow-lg max-w-2xl">
+
+        <input
+          type="text"
+          id="pelanggan"
+          placeholder="Nama Pelanggan"
+          class="w-full border p-3 rounded-xl mb-4"
+        >
+
+        <input
+          type="text"
+          id="alamat"
+          placeholder="Alamat"
+          class="w-full border p-3 rounded-xl mb-4"
+        >
+
+        <input
+          type="date"
+          id="berlaku"
+          class="w-full border p-3 rounded-xl mb-4"
+        >
+
+        <button
+          onclick="buatVoucher()"
+          class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl"
+        >
+          Generate Voucher
+        </button>
+
+        <!-- Voucher -->
+        <div
+          id="voucherBox"
+          class="hidden mt-8 bg-gradient-to-r from-green-500 to-green-700 text-white p-8 rounded-2xl"
+        >
+
+          <h3 class="text-2xl font-bold mb-4">
+            Voucher Diskon
+          </h3>
+
+          <p class="mb-2">
+            <b>Kode Voucher:</b>
+            <span id="voucherKode"></span>
+          </p>
+
+          <p class="mb-2">
+            <b>Pelanggan:</b>
+            <span id="voucherPelanggan"></span>
+          </p>
+
+          <p class="mb-2">
+            <b>Alamat:</b>
+            <span id="voucherAlamat"></span>
+          </p>
+
+          <p class="mb-4">
+            <b>Berlaku Sampai:</b>
+            <span id="voucherBerlaku"></span>
+          </p>
+
+          <div class="flex gap-3">
+
+            <button
+              onclick="shareWA()"
+              class="bg-white text-green-700 px-4 py-2 rounded-xl font-bold"
+            >
+              Bagikan WA
+            </button>
+
+            <button
+              onclick="downloadVoucher()"
+              class="bg-yellow-400 text-black px-4 py-2 rounded-xl font-bold"
+            >
+              Download Gambar
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Daftar Voucher -->
+    <div id="daftarVoucherMenu" class="hidden">
+
+      <h2 class="text-3xl font-bold mb-6">
+        Daftar Voucher
+      </h2>
+
+      <div class="bg-white rounded-2xl shadow-lg overflow-auto">
+
+        <table class="w-full">
+
+          <thead class="bg-slate-200">
+
+            <tr>
+
+              <th class="p-4">Kode Voucher</th>
+              <th class="p-4">Pelanggan</th>
+              <th class="p-4">Alamat</th>
+              <th class="p-4">Berlaku Sampai</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">Aksi</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="voucherTable">
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+    <!-- Data Penjualan -->
+    <div id="dataPenjualanMenu" class="hidden">
+
+      <h2 class="text-3xl font-bold mb-6">
+        Data Penjualan
+      </h2>
+
+      <div class="bg-white rounded-2xl shadow-lg overflow-auto">
+
+        <table class="w-full">
+
+          <thead class="bg-slate-200">
+
+            <tr>
+
+              <th class="p-4">No</th>
+              <th class="p-4">Waktu Input</th>
+              <th class="p-4">Tim Marketing</th>
+              <th class="p-4">Pembeli</th>
+              <th class="p-4">No HP</th>
+              <th class="p-4">Alamat</th>
+              <th class="p-4">Kategori</th>
+              <th class="p-4">Produk</th>
+              <th class="p-4">Voucher Klaim</th>
+              <th class="p-4">Harga Final</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr class="border-t">
+
+              <td class="p-4">1</td>
+              <td class="p-4">24 Mei 2026</td>
+              <td class="p-4">Budi</td>
+              <td class="p-4">Andi</td>
+              <td class="p-4">08123456789</td>
+              <td class="p-4">Pekalongan</td>
+              <td class="p-4">Elektronik</td>
+              <td class="p-4">Laptop</td>
+              <td class="p-4">VCR123</td>
+              <td class="p-4">Rp 5.000.000</td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+let currentKode = ''
+
+function showMenu(menu) {
+
+  document.getElementById('buatVoucherMenu').classList.add('hidden')
+  document.getElementById('daftarVoucherMenu').classList.add('hidden')
+  document.getElementById('dataPenjualanMenu').classList.add('hidden')
+
+  if (menu == 'buatVoucher') {
+    document.getElementById('buatVoucherMenu').classList.remove('hidden')
+  }
+
+  if (menu == 'daftarVoucher') {
+    document.getElementById('daftarVoucherMenu').classList.remove('hidden')
+  }
+
+  if (menu == 'dataPenjualan') {
+    document.getElementById('dataPenjualanMenu').classList.remove('hidden')
+  }
+
+}
+
+function buatVoucher() {
+
+  const pelanggan = document.getElementById('pelanggan').value
+  const alamat = document.getElementById('alamat').value
+  const berlaku = document.getElementById('berlaku').value
+
+  currentKode =
+    'VCR-' +
+    Math.random().toString(36).substring(2, 8).toUpperCase()
+
+  document.getElementById('voucherBox')
+    .classList.remove('hidden')
+
+  document.getElementById('voucherKode')
+    .innerText = currentKode
+
+  document.getElementById('voucherPelanggan')
+    .innerText = pelanggan
+
+  document.getElementById('voucherAlamat')
+    .innerText = alamat
+
+  document.getElementById('voucherBerlaku')
+    .innerText = berlaku
+
+  const table = document.getElementById('voucherTable')
+
+  table.innerHTML += `
+    <tr class="border-t">
+
+      <td class="p-4">${currentKode}</td>
+      <td class="p-4">${pelanggan}</td>
+      <td class="p-4">${alamat}</td>
+      <td class="p-4">${berlaku}</td>
+      <td class="p-4">
+        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+          Aktif
+        </span>
+      </td>
+
+      <td class="p-4 flex gap-2">
+
+        <button
+          onclick="shareVoucher('${currentKode}')"
+          class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg"
+        >
+          Bagikan
+        </button>
+
+        <button
+          onclick="downloadVoucher()"
+          class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-lg"
+        >
+          Download
+        </button>
+
+      </td>
+
+    </tr>
+  `
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Voucher Berhasil Dibuat'
+  })
+
+}
+
+function shareWA() {
+
+  const text =
+    `Kode Voucher Anda: ${currentKode}`
+
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(text)}`
+  )
+
+}
+
+function shareVoucher(kode) {
+
+  const text =
+    `Kode Voucher Anda: ${kode}`
+
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(text)}`
+  )
+
+}
+
+async function downloadVoucher() {
+
+  const element =
+    document.getElementById('voucherBox')
+
+  const canvas =
+    await html2canvas(element)
+
+  const link =
+    document.createElement('a')
+
+  link.download = 'voucher.png'
+
+  link.href = canvas.toDataURL()
+
+  link.click()
+
+}
+
+</script>
+
+</body>
+</html>
