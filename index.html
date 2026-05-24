@@ -299,7 +299,7 @@
                                 <div id="voucher-element" class="voucher-card mb-5 pt-14">
                                     <!-- Header Toko -->
                                     <div class="absolute top-0 left-0 w-full bg-black/40 text-center py-2.5 border-b border-yellow-500/40 shadow-sm z-10">
-                                        <h1 class="text-xl font-black tracking-widest text-yellow-400 uppercase drop-shadow-md">Turja Computer</h1>
+                                        <h1 class="text-xl font-black tracking-widest text-white uppercase drop-shadow-md">Turja Computer</h1>
                                     </div>
                                     
                                     <div class="voucher-dashed bg-black/10 backdrop-blur-sm relative z-10 flex flex-col items-center">
@@ -320,9 +320,9 @@
                                         
                                         <!-- Informasi Penerima (Tanpa Label, Jarak Rapat) -->
                                         <div class="text-center w-full border-t border-yellow-500/40 pt-2.5 flex flex-col items-center space-y-0.5">
-                                            <strong id="v-preview-nama" class="text-yellow-300 break-words text-lg uppercase leading-tight">-</strong>
-                                            <strong id="v-preview-wa" class="text-yellow-200/90 break-words text-sm font-medium leading-tight">-</strong>
-                                            <strong class="text-yellow-200/90 break-words text-sm font-medium leading-tight"><span id="v-preview-desa">-</span>, <span id="v-preview-kecamatan">-</span></strong>
+                                            <strong id="v-preview-nama" class="text-white break-words text-lg uppercase leading-tight">-</strong>
+                                            <strong id="v-preview-wa" class="text-white break-words text-sm font-medium leading-tight">-</strong>
+                                            <strong class="text-white break-words text-sm font-medium leading-tight"><span id="v-preview-desa">-</span>, <span id="v-preview-kecamatan">-</span></strong>
                                         </div>
                                         
                                         <!-- Berlaku s/d digabung -->
@@ -463,7 +463,9 @@
 
     <script>
         // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-        const GOOGLE_MACRO_URL = 'https://script.google.com/macros/s/AKfycbwP_wWq8r9gQ_oA-4mS_r_x_M/exec'; // Contoh, ganti dengan URL Anda
+        // PENTING: Jangan masukkan URL "docs.google.com/...". Anda harus membuat Web App di Apps Script.
+        // Lihat panduan di chat untuk cara mendapatkan URL "script.google.com/..."
+        const GOOGLE_MACRO_URL = 'https://script.google.com/macros/s/AKfycbxHv50d8J2GF14zR62YdqR_OJcGXG4Y_whHPQSHHSmAPLpMBjuzBq9yifEuJLXuQKekkA/exec'; // Ganti dengan URL Web App Apps Script Anda nanti
 
         // Initial Data State (Simulasi Database Lokal)
         let db = {
