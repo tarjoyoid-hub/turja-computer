@@ -297,30 +297,37 @@
                             <div id="voucher-preview-container" class="w-full max-w-sm hidden">
                                 <h4 class="text-sm font-bold text-gray-500 mb-3 text-center uppercase tracking-wide">Hasil Voucer:</h4>
                                 <div id="voucher-element" class="voucher-card mb-5 pt-14">
-                                    <!-- Badge 100 Rb -->
-                                    <div class="absolute top-10 right-2 bg-gradient-to-r from-yellow-300 to-yellow-500 text-red-900 font-extrabold px-3 py-1 rounded-lg shadow-lg text-lg transform rotate-[-5deg] border border-yellow-200 z-20">
-                                        100 Rb
-                                    </div>
-                                    
                                     <!-- Header Toko -->
                                     <div class="absolute top-0 left-0 w-full bg-black/40 text-center py-2.5 border-b border-yellow-500/40 shadow-sm z-10">
                                         <h1 class="text-xl font-black tracking-widest text-yellow-400 uppercase drop-shadow-md">Turja Computer</h1>
                                     </div>
                                     
-                                    <div class="voucher-dashed bg-black/10 backdrop-blur-sm relative z-10">
-                                        <div class="text-center mb-5">
-                                            <!-- Desain Kode Voucer Baru -->
-                                            <div class="bg-black/40 p-3 rounded-xl border border-yellow-500/60 shadow-inner inline-block relative overflow-hidden group">
-                                                <div class="absolute inset-0 w-10 bg-yellow-400/20 skew-x-[-20deg] group-hover:translate-x-32 transition-transform duration-700"></div>
-                                                <h2 class="text-3xl font-extrabold tracking-[0.2em] text-yellow-400 drop-shadow-lg font-mono relative z-10" id="v-preview-code">VCR-XXXXXX</h2>
+                                    <div class="voucher-dashed bg-black/10 backdrop-blur-sm relative z-10 flex flex-col items-center">
+                                        <!-- Teks VOUCHER -->
+                                        <div class="text-yellow-100 tracking-[0.3em] font-bold text-xs sm:text-sm uppercase mb-1 drop-shadow-sm">Voucher</div>
+                                        
+                                        <!-- Nominal 100 Rb (Paling Besar) -->
+                                        <div class="text-5xl sm:text-6xl font-black text-yellow-400 drop-shadow-xl mb-4 transform -skew-x-6">100 Rb</div>
+                                        
+                                        <!-- Desain Kode Voucer -->
+                                        <div class="text-center mb-4 w-full">
+                                            <div class="bg-black/40 px-3 py-2 rounded-xl border border-yellow-500/60 shadow-inner inline-block relative overflow-hidden group">
+                                                <div class="absolute inset-0 w-10 bg-yellow-400/20 skew-x-[-20deg] group-hover:translate-x-40 transition-transform duration-700"></div>
+                                                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-widest text-yellow-400 drop-shadow-lg font-mono relative z-10" id="v-preview-code">VCR-XXXXXX</h2>
                                             </div>
-                                            <p class="text-xs text-yellow-100/80 mt-2 font-medium">Tunjukkan kode ini saat melakukan pembelian</p>
+                                            <p class="text-[10px] text-yellow-100/70 mt-1.5 uppercase tracking-wide">Tunjukkan kode saat pembelian</p>
                                         </div>
-                                        <div class="text-sm border-t border-yellow-500/40 pt-3 space-y-2">
-                                            <div class="flex justify-between items-start gap-3"><span class="text-yellow-100 whitespace-nowrap">Penerima:</span> <strong id="v-preview-nama" class="text-right text-yellow-300 break-words">-</strong></div>
-                                            <div class="flex justify-between items-start gap-3"><span class="text-yellow-100 whitespace-nowrap">No. WA:</span> <strong id="v-preview-wa" class="text-right text-yellow-300 break-words">-</strong></div>
-                                            <div class="flex justify-between items-start gap-3"><span class="text-yellow-100 whitespace-nowrap">Alamat:</span> <strong class="text-right text-yellow-300 break-words"><span id="v-preview-desa">-</span>, <span id="v-preview-kecamatan">-</span></strong></div>
-                                            <div class="flex justify-between items-start mt-3 pt-2 border-t border-yellow-500/30"><span class="text-yellow-100 whitespace-nowrap">Berlaku s/d:</span> <strong id="v-preview-tanggal" class="text-yellow-400 drop-shadow-sm">-</strong></div>
+                                        
+                                        <!-- Informasi Penerima (Tanpa Label, Jarak Rapat) -->
+                                        <div class="text-center w-full border-t border-yellow-500/40 pt-2.5 flex flex-col items-center space-y-0.5">
+                                            <strong id="v-preview-nama" class="text-yellow-300 break-words text-lg uppercase leading-tight">-</strong>
+                                            <strong id="v-preview-wa" class="text-yellow-200/90 break-words text-sm font-medium leading-tight">-</strong>
+                                            <strong class="text-yellow-200/90 break-words text-sm font-medium leading-tight"><span id="v-preview-desa">-</span>, <span id="v-preview-kecamatan">-</span></strong>
+                                        </div>
+                                        
+                                        <!-- Berlaku s/d digabung -->
+                                        <div class="text-center w-full mt-2 pt-2 border-t border-yellow-500/30">
+                                            <span class="text-yellow-100/90 text-xs tracking-wide">Berlaku s/d: <strong id="v-preview-tanggal" class="text-yellow-400 drop-shadow-sm">-</strong></span>
                                         </div>
                                     </div>
                                 </div>
