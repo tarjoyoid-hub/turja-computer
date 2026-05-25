@@ -280,7 +280,7 @@
                     <h3 class="text-lg font-bold text-gray-500 mb-4">Voucer Berhasil Dibuat!</h3>
                     
                     <!-- Canvas (Hidden logic, used for image download) -->
-                    <canvas id="voucherCanvas" width="600" height="300" class="hidden"></canvas>
+                    <canvas id="voucherCanvas" width="680" height="320" class="hidden"></canvas>
                     
                     <!-- HTML Visual Card Representation (max-w-sm) -->
                     <div class="w-full max-w-sm bg-gradient-to-br from-red-800 via-red-900 to-red-950 rounded-xl p-5 text-white shadow-xl relative overflow-hidden mb-6 border-2 border-yellow-400">
@@ -439,6 +439,25 @@
                 }
             }
         });
+
+        // Helper untuk memformat tanggal ISO (yyyy-MM-dd) menjadi format Indonesia (dd Bulan yyyy)
+        function formatDateToIndonesian(dateStr) {
+            if (!dateStr) return "";
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const year = parts[0];
+                const monthIndex = parseInt(parts[1], 10) - 1;
+                const day = parts[2];
+                const months = [
+                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+                if (monthIndex >= 0 && monthIndex < 12) {
+                    return `${day} ${months[monthIndex]} ${year}`;
+                }
+            }
+            return dateStr; // fallback jika format tidak sesuai
+        }
 
         function toggleFormMarketing() {
             const formContainer = document.getElementById('form-marketing-container');
@@ -641,7 +660,7 @@
                         <p><strong>No WA:</strong> ${v['No WA']}</p>
                         <p><strong>Desa/Kel:</strong> ${v['Desa/Kelurahan']}</p>
                         <p><strong>Kecamatan:</strong> ${v.Kecamatan}</p>
-                        <p><strong>Berlaku Sampai:</strong> ${v['Berlaku Sampai']}</p>
+                        <p><strong>Berlaku Sampai:</strong> ${formatDateToIndonesian(v['Berlaku Sampai'])}</p>
                         <p><strong>Pembuat (Marketing):</strong> ${v.Pembuat}</p>
                     </div>
                     ${v.Status === 'Aktif' ? 
@@ -787,17 +806,7 @@
 
         // ================= USER & GENERAL FUNCTIONS =================
 
-        function generateRandomCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < 8; i++) {
-                if(i === 4) result += '-';
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        async function generateVoucher(e) {
+        function generateVoucher(e) {
             e.preventDefault();
             const pel = document.getElementById('v-pelanggan').value;
             const nowa = document.getElementById('v-nowa').value;
@@ -806,31 +815,32 @@
             const kode = generateRandomCode();
 
             showLoading();
-            const res = await callGAS('createVoucher', {
+            callGAS('createVoucher', {
                 kode, pelanggan: pel, nowa: nowa, desa: desa, kecamatan: kecamatan, pembuat: currentUser.name
+            }).then(res => {
+                hideLoading();
+                if (res.status === 'success') {
+                    showToast("Voucer Berhasil Disimpan!");
+                    
+                    const tglExpired = res.data.berlakuSampai; // ISO: yyyy-MM-dd
+                    const formattedDate = formatDateToIndonesian(tglExpired); // 01 Juni 2026
+                    
+                    // Show display (Ramping, Teks Rata Tengah, Tanpa label teks)
+                    document.getElementById('disp-v-pelanggan').textContent = pel;
+                    document.getElementById('disp-v-nowa').textContent = nowa;
+                    document.getElementById('disp-v-alamat').textContent = `${desa}, Kec. ${kecamatan}`;
+                    document.getElementById('disp-v-kode').textContent = kode;
+                    document.getElementById('disp-v-tanggal').textContent = formattedDate;
+                    document.getElementById('new-voucher-display').classList.remove('hidden');
+                    
+                    // Save state for share/download
+                    activeVoucherData = { kode, pelanggan: pel, nowa, desa, kecamatan, tanggal: formattedDate };
+                    
+                    e.target.reset();
+                } else {
+                    showToast("Gagal menyimpan voucer", true);
+                }
             });
-            hideLoading();
-
-            if (res.status === 'success') {
-                showToast("Voucer Berhasil Disimpan!");
-                
-                const tglExpired = res.data.berlakuSampai; 
-                
-                // Show display (Ramping, Teks Rata Tengah, Tanpa label teks)
-                document.getElementById('disp-v-pelanggan').textContent = pel;
-                document.getElementById('disp-v-nowa').textContent = nowa;
-                document.getElementById('disp-v-alamat').textContent = `${desa}, Kec. ${kecamatan}`;
-                document.getElementById('disp-v-kode').textContent = kode;
-                document.getElementById('disp-v-tanggal').textContent = tglExpired;
-                document.getElementById('new-voucher-display').classList.remove('hidden');
-                
-                // Save state for share/download
-                activeVoucherData = { kode, pelanggan: pel, nowa, desa, kecamatan, tanggal: tglExpired };
-                
-                e.target.reset();
-            } else {
-                showToast("Gagal menyimpan voucer", true);
-            }
         }
 
         async function loadVouchers() {
@@ -843,6 +853,7 @@
             if(res.status === 'success') {
                 res.data.forEach(v => {
                     const statusClass = v.Status === 'Aktif' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200';
+                    const indonesianDate = formatDateToIndonesian(v['Berlaku Sampai']);
                     const tr = document.createElement('tr');
                     tr.className = "border-b hover:bg-green-50 transition whitespace-nowrap";
                     tr.innerHTML = `
@@ -851,11 +862,11 @@
                         <td class="p-2">${v['No WA']}</td>
                         <td class="p-2">${v['Desa/Kelurahan']}</td>
                         <td class="p-2">${v.Kecamatan}</td>
-                        <td class="p-2">${v['Berlaku Sampai']}</td>
+                        <td class="p-2">${indonesianDate}</td>
                         <td class="p-2"><span class="px-2 py-1 rounded text-xs font-bold shadow-sm ${statusClass}">${v.Status}</span></td>
                         <td class="p-2 text-center flex gap-1 justify-center">
-                            <button onclick="shareSingleWA('${v.Kode}', '${v['Berlaku Sampai']}', '${v['No WA']}')" class="bg-green-600 text-white px-2 py-1.5 rounded hover:bg-green-700 text-xs font-semibold shadow-sm" title="Share WA">WA</button>
-                            <button onclick="drawAndDownloadVoucher('${v.Kode}', '${v.Pelanggan}', '${v['No WA']}', '${v['Desa/Kelurahan']}', '${v.Kecamatan}', '${v['Berlaku Sampai']}')" class="bg-gray-700 text-white px-2 py-1.5 rounded hover:bg-gray-800 text-xs font-semibold shadow-sm" title="Download">DL</button>
+                            <button onclick="shareSingleWA('${v.Kode}', '${indonesianDate}', '${v['No WA']}')" class="bg-green-600 text-white px-2 py-1.5 rounded hover:bg-green-700 text-xs font-semibold shadow-sm" title="Share WA">WA</button>
+                            <button onclick="drawAndDownloadVoucher('${v.Kode}', '${v.Pelanggan}', '${v['No WA']}', '${v['Desa/Kelurahan']}', '${v.Kecamatan}', '${indonesianDate}')" class="bg-gray-700 text-white px-2 py-1.5 rounded hover:bg-gray-800 text-xs font-semibold shadow-sm" title="Download">DL</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -946,119 +957,141 @@
             drawAndDownloadVoucher(activeVoucherData.kode, activeVoucherData.pelanggan, activeVoucherData.nowa, activeVoucherData.desa, activeVoucherData.kecamatan, activeVoucherData.tanggal);
         }
 
-        // Render Canvas: Tema Merah Emas Premium yang Lebih Menarik (Borders, Radial Gradient, Curve Decor)
+        // Render Canvas: Diperlebar menjadi 680x320 agar lebih proporsional, persis kartu visual pratinjau
         function drawAndDownloadVoucher(kode, pelanggan, nowa, desa, kecamatan, tanggal) {
             const canvas = document.getElementById('voucherCanvas');
             const ctx = canvas.getContext('2d');
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // 1. Background Gradient Radial Merah Gelap Elegan (Lebih dramatis & 3D)
-            const grad = ctx.createRadialGradient(300, 150, 50, 300, 150, 350);
-            grad.addColorStop(0, '#be123c'); // rose-700 cerah di tengah
+            // 1. Background Gradient Radial Merah Gelap Mewah (Sama dengan visual)
+            const grad = ctx.createRadialGradient(340, 160, 50, 340, 160, 400);
+            grad.addColorStop(0, '#be123c'); // rose-700 di tengah
             grad.addColorStop(0.5, '#881337'); // rose-900 gelap
             grad.addColorStop(1, '#4c0519'); // rose-950 sangat gelap di tepi
             ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 600, 300);
+            ctx.fillRect(0, 0, 680, 320);
 
-            // 2. Ornamen Garis Lengkung Emas (Curve Decoration)
-            ctx.strokeStyle = 'rgba(254, 240, 138, 0.15)'; // Emas transparan
+            // 2. Ornamen Lingkaran Emas Transparan di Pojok Kanan Atas dan Kiri Bawah (Aesthetic)
+            ctx.strokeStyle = 'rgba(250, 204, 21, 0.15)'; 
             ctx.lineWidth = 1.5;
             
-            // Sisi Kiri
+            // Pojok Kanan Atas
             ctx.beginPath();
-            ctx.moveTo(-50, 100);
-            ctx.bezierCurveTo(100, 50, 150, 250, -50, 200);
+            ctx.arc(680, 0, 90, 0, 2 * Math.PI);
             ctx.stroke();
 
-            // Sisi Kanan
+            // Pojok Kiri Bawah
             ctx.beginPath();
-            ctx.moveTo(650, 80);
-            ctx.bezierCurveTo(450, 120, 500, 280, 650, 220);
+            ctx.arc(0, 320, 90, 0, 2 * Math.PI);
             ctx.stroke();
 
-            // 3. Bingkai Emas Ganda (Double Border)
+            // 3. Bingkai Emas Ganda di Tepian Gambar (Gold Border)
             ctx.strokeStyle = '#eab308'; // Gold-500
             ctx.lineWidth = 2;
-            ctx.strokeRect(15, 15, 570, 270); // Bingkai Luar
+            ctx.strokeRect(15, 15, 650, 290); // Bingkai Luar
 
-            ctx.strokeStyle = 'rgba(234, 179, 8, 0.4)'; // Bingkai Dalam Transparan
+            ctx.strokeStyle = 'rgba(234, 179, 8, 0.35)'; // Bingkai Dalam
             ctx.lineWidth = 1;
-            ctx.strokeRect(21, 21, 558, 258);
+            ctx.strokeRect(21, 21, 638, 278);
 
-            // 4. Header: Nama Toko "TURJA COMPUTER" Besar & Rata Tengah
+            // 4. Header Tengah: Brand "TURJA COMPUTER" Besar & Tebal
             ctx.textAlign = 'center';
             ctx.fillStyle = '#facc15'; // Gold-400
-            ctx.font = 'black 26px "Arial Black", sans-serif'; // Diperbesar
-            ctx.fillText('TURJA COMPUTER', 300, 55);
+            ctx.font = 'black 28px "Arial Black", sans-serif'; 
+            ctx.fillText('TURJA COMPUTER', 340, 58);
 
             // Sub-header
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 12px "Arial", sans-serif';
-            ctx.fillText('VOUCHER DISKON EKSKLUSIF', 300, 75);
+            ctx.font = 'bold 11px "Arial", sans-serif';
+            ctx.fillText('VOUCHER DISKON EKSKLUSIF', 340, 78);
 
-            // Pembatas Garis Emas Tipis
+            // Garis Pembatas Header Emas Tipis
             ctx.strokeStyle = 'rgba(250, 204, 21, 0.3)';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(150, 85);
-            ctx.lineTo(450, 85);
+            ctx.moveTo(200, 88);
+            ctx.lineTo(480, 88);
             ctx.stroke();
 
-            // 5. Teks Rata Tengah Informasi Penerima (Center Aligned)
-            ctx.font = 'black 24px "Arial", sans-serif';
+            // 5. Box Penerima Transparan Gelap di Tengah (Center Aligned)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+            const boxX = 140;
+            const boxY = 102;
+            const boxWidth = 400;
+            const boxHeight = 94;
+            const radius = 8;
+            
+            ctx.beginPath();
+            if (ctx.roundRect) {
+                ctx.roundRect(boxX, boxY, boxWidth, boxHeight, radius);
+            } else {
+                ctx.rect(boxX, boxY, boxWidth, boxHeight);
+            }
+            ctx.fill();
+            
+            ctx.strokeStyle = '#991b1b'; // Border box marun gelap
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Teks Informasi Penerima Rata Tengah (Center Aligned)
+            ctx.textAlign = 'center';
             ctx.fillStyle = '#ffffff';
-            ctx.fillText(pelanggan, 300, 125); // Nama Penerima
+            ctx.font = 'bold 22px "Arial", sans-serif';
+            ctx.fillText(pelanggan, 340, 130); // Nama Penerima
 
+            ctx.fillStyle = '#fde047'; // Kuning WA
             ctx.font = 'bold 15px "Courier New", monospace';
-            ctx.fillStyle = '#fde047'; // Kuning Terang
-            ctx.fillText(nowa, 300, 150); // No WA
+            ctx.fillText(nowa, 340, 154); // No WA
 
-            ctx.font = 'italic 14px "Arial", sans-serif';
-            ctx.fillStyle = '#fca5a5'; // Merah Muda lembut
-            ctx.fillText(`${desa}, Kec. ${kecamatan}`, 300, 170); // Alamat gabungan
+            ctx.fillStyle = '#e2e8f0'; // Alamat
+            ctx.font = '13px "Arial", sans-serif';
+            ctx.fillText(`${desa}, Kec. ${kecamatan}`, 340, 178); // Alamat gabungan
 
-            // 6. Bagian Bawah: Kode & Nominal Diskon
-            ctx.textAlign = 'left'; // reset alignment untuk detail kiri
+            // 6. Sisi Kiri Bawah: Kode Voucer
+            ctx.textAlign = 'left'; 
 
-            // Label Kode Voucer
             ctx.fillStyle = '#fca5a5';
             ctx.font = 'bold 10px sans-serif';
-            ctx.fillText('KODE VOUCER', 40, 208);
+            ctx.fillText('KODE VOUCER', 40, 222);
 
-            // Kotak Kode (Putih)
+            // Kotak Putih Kode Voucer
             ctx.fillStyle = '#ffffff';
-            ctx.roundRect ? ctx.roundRect(40, 215, 200, 42, 6) : ctx.fillRect(40, 215, 200, 42); 
-            ctx.fill();
+            if (ctx.roundRect) {
+                ctx.beginPath();
+                ctx.roundRect(40, 228, 220, 42, 6);
+                ctx.fill();
+            } else {
+                ctx.fillRect(40, 228, 220, 42);
+            }
 
-            // Teks Kode di dalam kotak (Merah Gelap)
-            ctx.fillStyle = '#4c0519';
+            // Teks Kode di Dalam Kotak Putih (Center Aligned dalam kotak)
+            ctx.fillStyle = '#4c0519'; // red-950
             ctx.font = 'bold 22px monospace';
-            ctx.fillText(kode, 55, 244);
+            ctx.textAlign = 'center';
+            ctx.fillText(kode, 150, 256);
 
-            // 7. SISI KANAN: Nominal Diskon Besar (100 Rb)
+            // 7. Sisi Kanan Bawah: Nominal Diskon Emas Besar "100 Rb"
             ctx.textAlign = 'right';
 
-            // Label Nilai
             ctx.fillStyle = '#fde047';
             ctx.font = 'bold 10px sans-serif';
-            ctx.fillText('NILAI VOUCHER', 560, 208);
+            ctx.fillText('NILAI VOUCHER', 640, 222);
 
-            // "100 Rb" (Emas Besar Megah)
-            ctx.fillStyle = '#facc15';
-            ctx.font = 'black 50px "Arial Black", sans-serif';
-            ctx.fillText('100 Rb', 560, 252);
+            ctx.fillStyle = '#facc15'; // Gold
+            ctx.font = 'black 52px "Arial Black", sans-serif';
+            ctx.fillText('100 Rb', 640, 266);
 
-            // 8. Masa Berlaku di Bagian Paling Bawah Tengah
+            // 8. Teks Berlaku Sampai di Bagian Paling Bawah Tengah
             ctx.textAlign = 'center';
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-            ctx.font = '9px sans-serif';
-            ctx.fillText(`Berlaku s/d: ${tanggal}`, 300, 276);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            ctx.font = '11px "Arial", sans-serif';
+            ctx.fillText(`Berlaku s/d: ${tanggal}`, 340, 292);
 
-            // Reset Default alignment
+            // Reset alignment ke default kiri
             ctx.textAlign = 'left';
 
-            // Trigger Unduhan Gambar
+            // Trigger Download Hasil Render Gambar Canvas
             const link = document.createElement('a');
             link.download = `Voucer_${kode}.png`;
             link.href = canvas.toDataURL('image/png');
