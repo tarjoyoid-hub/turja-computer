@@ -17,12 +17,9 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Sidebar transition */
-        #sidebar { transition: transform 0.3s ease-in-out; }
-        .sidebar-open { transform: translateX(0); }
-        .sidebar-closed { transform: translateX(-100%); }
-        @media (min-width: 768px) {
-            .sidebar-closed { transform: translateX(0); }
+        /* Smooth height transition for dropdown mobile */
+        #sidebar {
+            transition: all 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -32,7 +29,7 @@
          GANTI URL DI BAWAH INI DENGAN URL WEB APP GAS ANDA
          ========================================== -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwCRflPWzkBEdDipkJlIIhjPLWxdkOLD0XFRZraabHeZT7xQGVBdEmPVPKni4Hx_gBR/exec"; 
+        const GAS_URL = "URL_WEB_APP_GAS_ANDA_DISINI"; 
     </script>
 
     <!-- LOADING OVERLAY -->
@@ -53,6 +50,7 @@
         <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-bold text-gray-800">Sistem Aplikasi</h1>
+                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full font-semibold mt-1">Aplikasi V.2</span>
                 <p class="text-gray-500 mt-2">Silakan login untuk melanjutkan</p>
             </div>
             <form id="login-form" onsubmit="handleLogin(event)">
@@ -72,18 +70,18 @@
     </div>
 
     <!-- MAIN APP LAYOUT (DASHBOARD) -->
-    <div id="app-layout" class="hidden min-h-screen flex flex-col md:flex-row">
+    <div id="app-layout" class="hidden min-h-screen flex flex-col md:flex-row relative">
         
-        <!-- Navbar Mobile -->
-        <div class="md:hidden bg-blue-800 text-white p-4 flex justify-between items-center z-20 sticky top-0">
+        <!-- Navbar Mobile (Hamburger Menu Posisi Atas) -->
+        <div id="mobile-navbar" class="md:hidden bg-blue-800 text-white p-4 flex justify-between items-center z-30 sticky top-0 w-full shadow-md">
             <h1 class="font-bold text-lg">Dashboard</h1>
-            <button onclick="toggleSidebar()" class="focus:outline-none">
+            <button id="hamburger-btn" onclick="toggleSidebar(event)" class="focus:outline-none p-1.5 hover:bg-blue-700 rounded transition">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
 
-        <!-- Sidebar -->
-        <div id="sidebar" class="bg-blue-900 text-white w-64 min-h-screen fixed md:relative z-10 sidebar-closed flex flex-col pt-16 md:pt-0">
+        <!-- Sidebar / Top Dropdown Menu -->
+        <div id="sidebar" class="bg-blue-900 text-white w-full md:w-64 absolute md:relative left-0 top-[56px] md:top-0 z-20 hidden md:flex flex-col shadow-lg md:shadow-none md:min-h-screen border-b border-blue-800 md:border-b-0">
             <div class="p-5 hidden md:block border-b border-blue-800">
                 <h2 class="text-2xl font-bold" id="sidebar-title">Menu</h2>
                 <p class="text-sm text-blue-300 mt-1" id="user-info-display">Role: -</p>
@@ -100,7 +98,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 bg-gray-100 p-4 md:p-8 w-full max-w-full overflow-x-hidden">
+        <div class="flex-1 bg-gray-100 p-4 md:p-8 w-full max-w-full overflow-x-hidden md:min-h-screen">
             
             <!-- ADMIN: VERIFIKASI VOUCER -->
             <div id="tab-admin-verifikasi" class="hidden-tab bg-white p-6 rounded-lg shadow">
@@ -114,7 +112,16 @@
 
             <!-- ADMIN: MARKETING -->
             <div id="tab-admin-marketing" class="hidden-tab">
-                <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <!-- Tombol Toggle Form Buat Akun -->
+                <div class="mb-4">
+                    <button id="btn-toggle-marketing" onclick="toggleFormMarketing()" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 font-semibold shadow transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                        Buat Akun Marketing Baru
+                    </button>
+                </div>
+
+                <!-- Form Buat Akun Marketing (Sembunyi by default) -->
+                <div id="form-marketing-container" class="bg-white p-6 rounded-lg shadow mb-6 hidden">
                     <h2 class="text-2xl font-bold mb-4">Buat Akun Marketing</h2>
                     <form onsubmit="createMarketingAccount(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -130,10 +137,12 @@
                             <input type="text" id="new-mkt-password" required class="w-full px-3 py-2 border rounded-lg">
                         </div>
                         <div class="md:col-span-3">
-                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Akun</button>
+                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Simpan Akun</button>
                         </div>
                     </form>
                 </div>
+
+                <!-- Daftar Tabel Akun Marketing -->
                 <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
                     <h2 class="text-xl font-bold mb-4">Daftar Akun Marketing</h2>
                     <table class="w-full text-left border-collapse min-w-[600px]">
@@ -142,6 +151,7 @@
                                 <th class="p-3">Nama Lengkap</th>
                                 <th class="p-3">Username</th>
                                 <th class="p-3">Password</th>
+                                <th class="p-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="marketing-list-body"></tbody>
@@ -151,6 +161,15 @@
 
             <!-- DATA PENJUALAN (ADMIN & USER) -->
             <div id="tab-data-penjualan" class="hidden-tab">
+                <!-- Tombol Toggle Form Input Penjualan -->
+                <div class="mb-4 hidden" id="btn-toggle-penjualan-container">
+                    <button id="btn-toggle-penjualan" onclick="toggleFormPenjualan()" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 font-semibold shadow transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Tambah Penjualan Baru
+                    </button>
+                </div>
+
+                <!-- Form Penjualan (Sembunyi by default) -->
                 <div class="bg-white p-6 rounded-lg shadow mb-6 hidden" id="form-tambah-penjualan">
                     <h2 class="text-2xl font-bold mb-4">Input Data Penjualan Baru</h2>
                     <form onsubmit="submitPenjualan(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -169,11 +188,12 @@
                         <input type="number" id="penj-harga" placeholder="Harga Final (Rp)" required class="px-3 py-2 border rounded-lg">
                         
                         <div class="md:col-span-2 flex justify-end mt-2">
-                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Penjualan</button>
+                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Simpan Penjualan</button>
                         </div>
                     </form>
                 </div>
 
+                <!-- Tabel Data Penjualan -->
                 <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold">Tabel Data Penjualan</h2>
@@ -207,7 +227,7 @@
                     <form onsubmit="updateAdminCreds(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
                         <input type="text" id="update-admin-user" placeholder="Username Admin Baru" required class="px-3 py-2 border rounded-lg">
                         <input type="password" id="update-admin-pass" placeholder="Password Admin Baru" required class="px-3 py-2 border rounded-lg">
-                        <button type="submit" class="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 md:col-span-2">Ubah Data Admin</button>
+                        <button type="submit" class="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 md:col-span-2 font-semibold">Ubah Data Admin</button>
                     </form>
                 </div>
                 <div>
@@ -238,7 +258,7 @@
                             <input type="date" id="v-tanggal" required class="w-full px-3 py-2 border rounded-lg">
                         </div>
                         <div class="md:col-span-2 mt-2">
-                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Buat & Simpan Voucer</button>
+                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Buat & Simpan Voucer</button>
                         </div>
                     </form>
                 </div>
@@ -262,11 +282,11 @@
                     </div>
 
                     <div class="flex gap-4 flex-wrap justify-center">
-                        <button onclick="shareToWA()" class="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                        <button onclick="shareToWA()" class="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition font-medium">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                             Bagikan ke WA
                         </button>
-                        <button onclick="downloadVoucherImage()" class="flex items-center bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition">
+                        <button onclick="downloadVoucherImage()" class="flex items-center bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition font-medium">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             Download Gambar
                         </button>
@@ -298,13 +318,38 @@
         </div>
     </div>
 
+    <!-- MODAL EDIT MARKETING -->
+    <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden flex justify-center items-center p-4">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">Edit Akun Marketing</h2>
+            <form id="form-edit-marketing" onsubmit="submitEditMarketing(event)">
+                <input type="hidden" id="edit-mkt-id">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                    <input type="text" id="edit-mkt-name" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" id="edit-mkt-username" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="text" id="edit-mkt-password" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeEditMarketing()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // State Application
         let currentUser = null; // { username, name, role }
         let appSettings = { aksesPenjualanUser: false };
         let activeVoucherData = null; // Untuk keperluan download/share
-        let sidebarOpen = false;
 
         // Cek Login Session saat load
         window.onload = () => {
@@ -318,17 +363,78 @@
         // UI Helpers
         function showLoading() { document.getElementById('loading').classList.remove('hidden'); }
         function hideLoading() { document.getElementById('loading').classList.add('hidden'); }
-        function toggleSidebar() {
-            sidebarOpen = !sidebarOpen;
-            const sb = document.getElementById('sidebar');
-            if(sidebarOpen) {
-                sb.classList.remove('sidebar-closed');
-                sb.classList.add('sidebar-open');
+        
+        // Logika Dropdown Hamburger Menu & klik di luar untuk menutup
+        function toggleSidebar(e) {
+            if (e) e.stopPropagation();
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('hidden');
             } else {
-                sb.classList.remove('sidebar-open');
-                sb.classList.add('sidebar-closed');
+                sidebar.classList.add('hidden');
             }
         }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar && window.innerWidth < 768) {
+                sidebar.classList.add('hidden');
+            }
+        }
+
+        // Event listener klik luar untuk menutup menu hamberger
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            
+            if (window.innerWidth < 768) {
+                if (sidebar && !sidebar.classList.contains('hidden')) {
+                    // Jika klik di luar sidebar dan bukan klik pada tombol hamburger
+                    if (!sidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                        closeSidebar();
+                    }
+                }
+            }
+        });
+
+        // Toggle Form Marketing
+        function toggleFormMarketing() {
+            const formContainer = document.getElementById('form-marketing-container');
+            const btn = document.getElementById('btn-toggle-marketing');
+            if (formContainer.classList.contains('hidden')) {
+                formContainer.classList.remove('hidden');
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    Tutup Form Buat Akun
+                `;
+            } else {
+                formContainer.classList.add('hidden');
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    Buat Akun Marketing Baru
+                `;
+            }
+        }
+
+        // Toggle Form Penjualan
+        function toggleFormPenjualan() {
+            const formContainer = document.getElementById('form-tambah-penjualan');
+            const btn = document.getElementById('btn-toggle-penjualan');
+            if (formContainer.classList.contains('hidden')) {
+                formContainer.classList.remove('hidden');
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    Tutup Form Input Penjualan
+                `;
+            } else {
+                formContainer.classList.add('hidden');
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Penjualan Baru
+                `;
+            }
+        }
+
         function showToast(msg, isError = false) {
             const t = document.getElementById('toast');
             const tc = document.getElementById('toast-content');
@@ -411,8 +517,9 @@
                 menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' });
                 menus.push({ id: 'admin-pengaturan', label: 'Pengaturan Akun', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' });
                 
-                // Form tambah disembunyikan untuk Admin (Opsional, tapi admin juga bisa input)
-                document.getElementById('form-tambah-penjualan').classList.remove('hidden');
+                // Form input disembunyikan untuk Admin di awal (Tombol toggle siap memunculkannya)
+                document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
+                document.getElementById('form-tambah-penjualan').classList.add('hidden');
             } else {
                 // User / Marketing
                 menus.push({ id: 'user-buatvoucer', label: 'Buat Voucer', icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6' });
@@ -421,7 +528,11 @@
                 // Cek Akses Penjualan
                 if (appSettings.aksesPenjualanUser === 'true') {
                     menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z' });
-                    document.getElementById('form-tambah-penjualan').classList.remove('hidden');
+                    document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
+                    document.getElementById('form-tambah-penjualan').classList.add('hidden');
+                } else {
+                    document.getElementById('btn-toggle-penjualan-container').classList.add('hidden');
+                    document.getElementById('form-tambah-penjualan').classList.add('hidden');
                 }
             }
 
@@ -436,7 +547,7 @@
                     Array.from(menuContainer.children).forEach(c => c.classList.remove('bg-blue-800'));
                     btn.classList.add('bg-blue-800');
                     switchTab(`tab-${m.id}`);
-                    if(window.innerWidth < 768) toggleSidebar(); // auto close on mobile
+                    closeSidebar(); // auto close on mobile after selecting
                 };
                 menuContainer.appendChild(btn);
             });
@@ -520,6 +631,7 @@
             if (res.status === 'success') {
                 showToast("Akun Marketing Berhasil Dibuat");
                 e.target.reset();
+                toggleFormMarketing(); // Sembunyikan form kembali
                 loadMarketing(); // Refresh table
             } else {
                 showToast(res.message, true);
@@ -533,14 +645,51 @@
             if(res.status === 'success') {
                 res.data.forEach(user => {
                     const tr = document.createElement('tr');
-                    tr.className = "border-b";
+                    tr.className = "border-b hover:bg-gray-50";
                     tr.innerHTML = `
                         <td class="p-3">${user.Nama}</td>
                         <td class="p-3">${user.Username}</td>
                         <td class="p-3 text-gray-500">${user.Password}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="openEditMarketing('${user.ID}', '${user.Nama}', '${user.Username}', '${user.Password}')" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm font-semibold transition">Edit</button>
+                        </td>
                     `;
                     tbody.appendChild(tr);
                 });
+            }
+        }
+
+        // Edit Marketing Modal Operations
+        function openEditMarketing(id, nama, username, password) {
+            document.getElementById('edit-mkt-id').value = id;
+            document.getElementById('edit-mkt-name').value = nama;
+            document.getElementById('edit-mkt-username').value = username;
+            document.getElementById('edit-mkt-password').value = password;
+            document.getElementById('modal-edit-marketing').classList.remove('hidden');
+        }
+
+        function closeEditMarketing() {
+            document.getElementById('modal-edit-marketing').classList.add('hidden');
+            document.getElementById('form-edit-marketing').reset();
+        }
+
+        async function submitEditMarketing(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-mkt-id').value;
+            const n = document.getElementById('edit-mkt-name').value;
+            const u = document.getElementById('edit-mkt-username').value;
+            const p = document.getElementById('edit-mkt-password').value;
+            
+            showLoading();
+            const res = await callGAS('updateMarketing', { id: id, name: n, username: u, password: p });
+            hideLoading();
+
+            if (res.status === 'success') {
+                showToast("Akun Marketing Berhasil Diperbarui");
+                closeEditMarketing();
+                loadMarketing(); // Refresh table
+            } else {
+                showToast(res.message, true);
             }
         }
 
@@ -566,6 +715,7 @@
             if(res.status === 'success') {
                 showToast("Pengaturan akses disimpan.");
                 appSettings.aksesPenjualanUser = isChecked.toString();
+                buildMenu(); // Re-build menu to update sales page availability
             } else {
                 showToast("Gagal mengubah pengaturan.", true);
                 document.getElementById('setting-akses-penjualan').checked = !isChecked; // Revert
@@ -634,8 +784,8 @@
                         <td class="p-2">${v['Berlaku Sampai']}</td>
                         <td class="p-2"><span class="px-2 py-1 rounded text-xs ${statusClass}">${v.Status}</span></td>
                         <td class="p-2 text-center flex gap-1 justify-center">
-                            <button onclick="shareSingleWA('${v.Kode}', '${v['Berlaku Sampai']}')" class="bg-green-500 text-white p-1 rounded hover:bg-green-600 text-xs" title="Share WA">WA</button>
-                            <button onclick="drawAndDownloadVoucher('${v.Kode}', '${v.Pelanggan}', '${v['Berlaku Sampai']}')" class="bg-gray-700 text-white p-1 rounded hover:bg-gray-800 text-xs" title="Download">DL</button>
+                            <button onclick="shareSingleWA('${v.Kode}', '${v['Berlaku Sampai']}')" class="bg-green-500 text-white p-1.5 rounded hover:bg-green-600 text-xs font-semibold" title="Share WA">WA</button>
+                            <button onclick="drawAndDownloadVoucher('${v.Kode}', '${v.Pelanggan}', '${v['Berlaku Sampai']}')" class="bg-gray-700 text-white p-1.5 rounded hover:bg-gray-800 text-xs font-semibold" title="Download">DL</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -663,6 +813,7 @@
             if (res.status === 'success') {
                 showToast("Data Penjualan Berhasil Disimpan");
                 e.target.reset();
+                toggleFormPenjualan(); // Sembunyikan form kembali
                 loadPenjualan(); // Refresh table
             } else {
                 showToast("Gagal menyimpan data", true);
