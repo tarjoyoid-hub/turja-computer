@@ -1,1 +1,1 @@
-https://turja-computer.vercel.app/
+'https://turja-computer.vercel.app/
