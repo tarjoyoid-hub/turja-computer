@@ -275,40 +275,53 @@
                     </form>
                 </div>
 
-                <!-- Tampilan Voucer Baru (Warna Merah dipadu Emas, Tanpa Label Kepada/WA, Nominal 100 Rb Besar) -->
+                <!-- Tampilan Voucer Baru (UKURAN RAMPING - max-w-sm, Teks Toko Besar, Rata Tengah, Merah Emas) -->
                 <div id="new-voucher-display" class="hidden bg-white p-6 rounded-lg shadow border-2 border-red-100 flex flex-col items-center text-center">
                     <h3 class="text-lg font-bold text-gray-500 mb-4">Voucer Berhasil Dibuat!</h3>
                     
                     <!-- Canvas (Hidden logic, used for image download) -->
                     <canvas id="voucherCanvas" width="600" height="300" class="hidden"></canvas>
                     
-                    <!-- HTML Visual Card Representation -->
-                    <div class="w-full max-w-md bg-gradient-to-br from-red-700 to-red-950 rounded-xl p-6 text-white shadow-xl relative overflow-hidden mb-6 text-left border-2 border-yellow-400">
-                        <div class="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-white opacity-5 rounded-full"></div>
-                        <div class="flex justify-between items-start mb-3">
+                    <!-- HTML Visual Card Representation (max-w-sm) -->
+                    <div class="w-full max-w-sm bg-gradient-to-br from-red-800 via-red-900 to-red-950 rounded-xl p-5 text-white shadow-xl relative overflow-hidden mb-6 border-2 border-yellow-400">
+                        <!-- Ornamen Lingkaran Emas Aesthetic -->
+                        <div class="absolute top-0 right-0 -mt-8 -mr-8 w-24 h-24 border-2 border-yellow-400 opacity-20 rounded-full"></div>
+                        <div class="absolute bottom-0 left-0 -mb-8 -ml-8 w-24 h-24 border-2 border-yellow-400 opacity-20 rounded-full"></div>
+                        
+                        <!-- Header: Nama Toko diperbesar dan diletakkan di atas tengah -->
+                        <div class="text-center pb-2 mb-4 border-b border-yellow-500 border-opacity-30">
+                            <h5 class="text-lg font-black text-yellow-400 uppercase tracking-widest drop-shadow">TURJA COMPUTER</h5>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-white opacity-80">Voucher Diskon Eksklusif</h4>
+                        </div>
+
+                        <!-- Data Penerima (RATA TENGAH / CENTER ALIGNED) -->
+                        <div class="bg-black bg-opacity-35 p-3 rounded-lg mb-4 border border-red-800 text-center flex flex-col items-center justify-center min-h-[90px]">
+                            <!-- Nama Penerima Besar -->
+                            <p class="text-white font-extrabold text-xl leading-tight" id="disp-v-pelanggan">-</p>
+                            <!-- No WA -->
+                            <p class="text-yellow-300 text-sm font-medium mt-1" id="disp-v-nowa">-</p>
+                            <!-- Alamat gabungan (Desa & Kecamatan) -->
+                            <p class="text-gray-200 text-xs mt-0.5" id="disp-v-alamat">-</p>
+                        </div>
+
+                        <!-- Bagian Bawah: Kode Voucer & Nilai Diskon Besar -->
+                        <div class="flex items-center justify-between mt-2">
                             <div>
-                                <h5 class="text-xs font-bold text-yellow-400 uppercase tracking-widest">Turja Computer</h5>
-                                <h4 class="text-lg font-bold uppercase tracking-wider text-white">Voucher Diskon</h4>
+                                <span class="block text-[9px] uppercase tracking-wider text-gray-300 mb-1">Kode Voucer</span>
+                                <div class="bg-white text-red-950 font-mono text-xl py-1 px-3 rounded-lg font-bold tracking-widest shadow-inner inline-block" id="disp-v-kode">
+                                    XXXX-XXXX
+                                </div>
                             </div>
-                            <!-- Big "100 Rb" Text -->
-                            <div class="text-yellow-400 text-4xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-tight">100 Rb</div>
-                        </div>
-
-                        <!-- Ruang Detail Penerima Terstruktur tanpa Label "Kepada:" / "WA:" -->
-                        <div class="bg-black bg-opacity-30 p-3 rounded-lg mb-4 border border-red-900">
-                            <p class="text-white font-bold text-lg leading-tight" id="disp-v-pelanggan">-</p>
-                            <p class="text-red-200 text-sm mt-1" id="disp-v-nowa">-</p>
-                            <p class="text-red-300 text-xs mt-0.5" id="disp-v-alamat">-</p>
-                        </div>
-
-                        <div class="flex justify-between items-center">
-                            <div class="bg-white text-red-950 font-mono text-2xl py-1.5 px-4 rounded-lg font-bold tracking-widest inline-block shadow-inner" id="disp-v-kode">
-                                XXXX-XXXX
+                            <!-- Nominal Besar 100 Rb Emas -->
+                            <div class="text-right">
+                                <span class="block text-[9px] uppercase tracking-wider text-yellow-400 mb-0.5">Nilai</span>
+                                <div class="text-yellow-400 text-3xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] tracking-tight">100 Rb</div>
                             </div>
-                            <p class="text-xs bg-red-900 bg-opacity-60 py-1.5 px-3 rounded text-right border border-red-800">
-                                Berlaku s/d:<br>
-                                <span id="disp-v-tanggal" class="font-bold text-yellow-300 text-sm"></span>
-                            </p>
+                        </div>
+                        
+                        <!-- Tanggal Kedaluwarsa di bagian paling bawah -->
+                        <div class="mt-4 pt-2 border-t border-red-800 border-opacity-40 text-center">
+                            <p class="text-[10px] text-gray-300">Berlaku s/d: <span id="disp-v-tanggal" class="font-bold text-yellow-400 text-xs"></span></p>
                         </div>
                     </div>
 
@@ -803,7 +816,7 @@
                 
                 const tglExpired = res.data.berlakuSampai; 
                 
-                // Show display (Tanpa label "Kepada:" / "WA:")
+                // Show display (Ramping, Teks Rata Tengah, Tanpa label teks)
                 document.getElementById('disp-v-pelanggan').textContent = pel;
                 document.getElementById('disp-v-nowa').textContent = nowa;
                 document.getElementById('disp-v-alamat').textContent = `${desa}, Kec. ${kecamatan}`;
@@ -922,7 +935,6 @@
             shareSingleWA(activeVoucherData.kode, activeVoucherData.tanggal, activeVoucherData.nowa);
         }
 
-        // Modifikasi kirim pesan langsung ke No WA penerima
         function shareSingleWA(kode, tanggal, nowa) {
             const text = `Halo! Ini kode voucer spesial Anda dari *Turja Computer*: *${kode}*.\nVoucer senilai *100 Rb* ini berlaku sampai tanggal *${tanggal}*.\nTerima kasih!`;
             const formattedNum = formatWA(nowa);
@@ -934,89 +946,116 @@
             drawAndDownloadVoucher(activeVoucherData.kode, activeVoucherData.pelanggan, activeVoucherData.nowa, activeVoucherData.desa, activeVoucherData.kecamatan, activeVoucherData.tanggal);
         }
 
-        // Render Canvas: Tema Merah dipadu Emas (Gold) & Putih, dengan teks Turja Computer & 100 Rb Besar
+        // Render Canvas: Tema Merah Emas Premium yang Lebih Menarik (Borders, Radial Gradient, Curve Decor)
         function drawAndDownloadVoucher(kode, pelanggan, nowa, desa, kecamatan, tanggal) {
             const canvas = document.getElementById('voucherCanvas');
             const ctx = canvas.getContext('2d');
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Background Gradien (Merah Mewah)
-            const grad = ctx.createLinearGradient(0, 0, 600, 300);
-            grad.addColorStop(0, '#991b1b'); // red-800
-            grad.addColorStop(1, '#450a0a'); // red-950
+            // 1. Background Gradient Radial Merah Gelap Elegan (Lebih dramatis & 3D)
+            const grad = ctx.createRadialGradient(300, 150, 50, 300, 150, 350);
+            grad.addColorStop(0, '#be123c'); // rose-700 cerah di tengah
+            grad.addColorStop(0.5, '#881337'); // rose-900 gelap
+            grad.addColorStop(1, '#4c0519'); // rose-950 sangat gelap di tepi
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 600, 300);
 
-            // Ornamen Lingkaran Emas Tipis di Sisi Kanan
-            ctx.strokeStyle = 'rgba(250, 204, 21, 0.15)';
+            // 2. Ornamen Garis Lengkung Emas (Curve Decoration)
+            ctx.strokeStyle = 'rgba(254, 240, 138, 0.15)'; // Emas transparan
+            ctx.lineWidth = 1.5;
+            
+            // Sisi Kiri
+            ctx.beginPath();
+            ctx.moveTo(-50, 100);
+            ctx.bezierCurveTo(100, 50, 150, 250, -50, 200);
+            ctx.stroke();
+
+            // Sisi Kanan
+            ctx.beginPath();
+            ctx.moveTo(650, 80);
+            ctx.bezierCurveTo(450, 120, 500, 280, 650, 220);
+            ctx.stroke();
+
+            // 3. Bingkai Emas Ganda (Double Border)
+            ctx.strokeStyle = '#eab308'; // Gold-500
             ctx.lineWidth = 2;
+            ctx.strokeRect(15, 15, 570, 270); // Bingkai Luar
+
+            ctx.strokeStyle = 'rgba(234, 179, 8, 0.4)'; // Bingkai Dalam Transparan
+            ctx.lineWidth = 1;
+            ctx.strokeRect(21, 21, 558, 258);
+
+            // 4. Header: Nama Toko "TURJA COMPUTER" Besar & Rata Tengah
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#facc15'; // Gold-400
+            ctx.font = 'black 26px "Arial Black", sans-serif'; // Diperbesar
+            ctx.fillText('TURJA COMPUTER', 300, 55);
+
+            // Sub-header
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px "Arial", sans-serif';
+            ctx.fillText('VOUCHER DISKON EKSKLUSIF', 300, 75);
+
+            // Pembatas Garis Emas Tipis
+            ctx.strokeStyle = 'rgba(250, 204, 21, 0.3)';
+            ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.arc(600, 150, 200, 0, 2 * Math.PI);
+            ctx.moveTo(150, 85);
+            ctx.lineTo(450, 85);
             ctx.stroke();
 
-            ctx.beginPath();
-            ctx.arc(0, 150, 80, 0, 2 * Math.PI);
-            ctx.stroke();
-
-            // Nama Toko "Turja Computer" (Emas)
-            ctx.fillStyle = '#facc15'; // Gold
-            ctx.font = 'bold 22px sans-serif';
-            ctx.fillText('TURJA COMPUTER', 40, 48);
-
-            // Teks Judul
+            // 5. Teks Rata Tengah Informasi Penerima (Center Aligned)
+            ctx.font = 'black 24px "Arial", sans-serif';
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 30px sans-serif';
-            ctx.fillText('VOUCHER DISKON', 40, 88);
+            ctx.fillText(pelanggan, 300, 125); // Nama Penerima
 
-            // Detail Penerima Terstruktur (Tanpa teks label "Kepada" / "WA")
-            ctx.font = 'bold 20px sans-serif';
+            ctx.font = 'bold 15px "Courier New", monospace';
+            ctx.fillStyle = '#fde047'; // Kuning Terang
+            ctx.fillText(nowa, 300, 150); // No WA
+
+            ctx.font = 'italic 14px "Arial", sans-serif';
+            ctx.fillStyle = '#fca5a5'; // Merah Muda lembut
+            ctx.fillText(`${desa}, Kec. ${kecamatan}`, 300, 170); // Alamat gabungan
+
+            // 6. Bagian Bawah: Kode & Nominal Diskon
+            ctx.textAlign = 'left'; // reset alignment untuk detail kiri
+
+            // Label Kode Voucer
+            ctx.fillStyle = '#fca5a5';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText('KODE VOUCER', 40, 208);
+
+            // Kotak Kode (Putih)
             ctx.fillStyle = '#ffffff';
-            ctx.fillText(pelanggan, 40, 128);
-
-            ctx.font = '15px sans-serif';
-            ctx.fillStyle = '#fca5a5'; // red-300
-            ctx.fillText(nowa, 40, 153);
-
-            ctx.font = 'italic 14px sans-serif';
-            ctx.fillStyle = '#fecaca'; // red-200
-            ctx.fillText(`${desa}, Kec. ${kecamatan}`, 40, 175);
-
-            // Kotak Kode (Putih Bersih)
-            ctx.fillStyle = '#ffffff';
-            ctx.roundRect ? ctx.roundRect(40, 198, 260, 50, 8) : ctx.fillRect(40, 198, 260, 50); 
+            ctx.roundRect ? ctx.roundRect(40, 215, 200, 42, 6) : ctx.fillRect(40, 215, 200, 42); 
             ctx.fill();
 
-            // Teks Kode (Merah Gelap)
-            ctx.fillStyle = '#7f1d1d'; // red-900
-            ctx.font = 'bold 26px monospace';
-            ctx.fillText(kode, 55, 233);
+            // Teks Kode di dalam kotak (Merah Gelap)
+            ctx.fillStyle = '#4c0519';
+            ctx.font = 'bold 22px monospace';
+            ctx.fillText(kode, 55, 244);
 
-            // Teks Berlaku
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '13px sans-serif';
-            ctx.fillText(`Berlaku s/d: ${tanggal}`, 40, 278);
+            // 7. SISI KANAN: Nominal Diskon Besar (100 Rb)
+            ctx.textAlign = 'right';
 
-            // SISI KANAN: Nominal Diskon Besar
+            // Label Nilai
+            ctx.fillStyle = '#fde047';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText('NILAI VOUCHER', 560, 208);
+
+            // "100 Rb" (Emas Besar Megah)
+            ctx.fillStyle = '#facc15';
+            ctx.font = 'black 50px "Arial Black", sans-serif';
+            ctx.fillText('100 Rb', 560, 252);
+
+            // 8. Masa Berlaku di Bagian Paling Bawah Tengah
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 18px sans-serif';
-            ctx.fillText('NILAI VOUCHER', 470, 110);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.font = '9px sans-serif';
+            ctx.fillText(`Berlaku s/d: ${tanggal}`, 300, 276);
 
-            // "100 Rb" (Emas Sangat Besar)
-            ctx.fillStyle = '#facc15'; // Gold
-            ctx.font = 'black 68px sans-serif';
-            ctx.fillText('100 Rb', 470, 180);
-
-            // Hiasan Garis Bawah Nominal (Emas)
-            ctx.strokeStyle = '#facc15';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(400, 198);
-            ctx.lineTo(540, 198);
-            ctx.stroke();
-
-            // Reset alignment ke left untuk render berikutnya
+            // Reset Default alignment
             ctx.textAlign = 'left';
 
             // Trigger Unduhan Gambar
