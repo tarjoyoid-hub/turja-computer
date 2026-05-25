@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Voucer & Penjualan</title>
+    <title>Sistem Manajemen Voucer & Penjualan V.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .hidden-tab { display: none; }
@@ -12,7 +12,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border-left-color: #3b82f6;
+            border-left-color: #15803d; /* green-700 */
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -29,11 +29,11 @@
          GANTI URL DI BAWAH INI DENGAN URL WEB APP GAS ANDA
          ========================================== -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwCRflPWzkBEdDipkJlIIhjPLWxdkOLD0XFRZraabHeZT7xQGVBdEmPVPKni4Hx_gBR/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxVRttVODZ3HxfgK99UnHjLhvWI4yXKw8-S7E4t5tx_VSnLEMeKw5qZTNrX5bPuDKCGnw/exec"; 
     </script>
 
     <!-- LOADING OVERLAY -->
-    <div id="loading" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden flex justify-center items-center">
+    <div id="loading" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex justify-center items-center">
         <div class="bg-white p-5 rounded-lg flex flex-col items-center shadow-xl">
             <div class="spinner mb-3"></div>
             <p class="text-gray-700 font-medium text-sm">Memproses data...</p>
@@ -42,29 +42,33 @@
 
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 translate-x-full opacity-0">
-        <div id="toast-content" class="bg-blue-600 text-white px-6 py-3 rounded shadow-lg font-medium"></div>
+        <div id="toast-content" class="bg-green-700 text-white px-6 py-3 rounded shadow-lg font-medium"></div>
     </div>
 
-    <!-- HALAMAN LOGIN -->
-    <div id="login-page" class="min-h-screen flex items-center justify-center p-4">
-        <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
+    <!-- HALAMAN LOGIN (Background gelap & form input lebih ramping) -->
+    <div id="login-page" class="fixed inset-0 bg-gray-800 z-40 flex items-center justify-center p-4">
+        <!-- max-w-sm membuat form lebih pendek secara horizontal -->
+        <div class="max-w-sm w-full bg-white rounded-xl shadow-2xl p-8 border-t-4 border-green-700">
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-bold text-gray-800">Sistem Aplikasi</h1>
-                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full font-semibold mt-1">Aplikasi V.2</span>
-                <p class="text-gray-500 mt-2">Silakan login untuk melanjutkan</p>
+                <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold mt-2 border border-green-300 shadow-sm">Aplikasi V.3</span>
+                <p class="text-gray-500 mt-2 text-sm">Silakan login untuk melanjutkan</p>
             </div>
             <form id="login-form" onsubmit="handleLogin(event)">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                    <input type="text" id="username" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                <!-- Wrapper input dibuat dengan margin X agar kotaknya lebih pendek -->
+                <div class="px-2">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                        <input type="text" id="username" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600" required>
+                    </div>
+                    <div class="mb-8">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-green-800 transition shadow-md">
+                        Login
+                    </button>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                    <input type="password" id="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-                    Login
-                </button>
             </form>
         </div>
     </div>
@@ -73,23 +77,23 @@
     <div id="app-layout" class="hidden min-h-screen flex flex-col md:flex-row relative">
         
         <!-- Navbar Mobile (Hamburger Menu Posisi Atas) -->
-        <div id="mobile-navbar" class="md:hidden bg-blue-800 text-white p-4 flex justify-between items-center z-30 sticky top-0 w-full shadow-md">
+        <div id="mobile-navbar" class="md:hidden bg-green-800 text-white p-4 flex justify-between items-center z-30 sticky top-0 w-full shadow-md">
             <h1 class="font-bold text-lg">Dashboard</h1>
-            <button id="hamburger-btn" onclick="toggleSidebar(event)" class="focus:outline-none p-1.5 hover:bg-blue-700 rounded transition">
+            <button id="hamburger-btn" onclick="toggleSidebar(event)" class="focus:outline-none p-1.5 hover:bg-green-700 rounded transition">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
 
         <!-- Sidebar / Top Dropdown Menu -->
-        <div id="sidebar" class="bg-blue-900 text-white w-full md:w-64 absolute md:relative left-0 top-[56px] md:top-0 z-20 hidden md:flex flex-col shadow-lg md:shadow-none md:min-h-screen border-b border-blue-800 md:border-b-0">
-            <div class="p-5 hidden md:block border-b border-blue-800">
-                <h2 class="text-2xl font-bold" id="sidebar-title">Menu</h2>
-                <p class="text-sm text-blue-300 mt-1" id="user-info-display">Role: -</p>
+        <div id="sidebar" class="bg-green-900 text-white w-full md:w-64 absolute md:relative left-0 top-[56px] md:top-0 z-20 hidden md:flex flex-col shadow-lg md:shadow-none md:min-h-screen border-b border-green-800 md:border-b-0">
+            <div class="p-5 hidden md:block border-b border-green-800">
+                <h2 class="text-2xl font-bold text-green-50" id="sidebar-title">Menu</h2>
+                <p class="text-sm text-green-300 mt-1" id="user-info-display">Role: -</p>
             </div>
             <nav class="flex-1 px-2 py-4 space-y-2" id="sidebar-menu">
                 <!-- Menu Item dimasukkan via JS -->
             </nav>
-            <div class="p-4 border-t border-blue-800">
+            <div class="p-4 border-t border-green-800">
                 <button onclick="logout()" class="w-full flex items-center p-2 text-red-300 hover:bg-red-800 hover:text-white rounded transition">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                     Logout
@@ -101,57 +105,54 @@
         <div class="flex-1 bg-gray-100 p-4 md:p-8 w-full max-w-full overflow-x-hidden md:min-h-screen">
             
             <!-- ADMIN: VERIFIKASI VOUCER -->
-            <div id="tab-admin-verifikasi" class="hidden-tab bg-white p-6 rounded-lg shadow">
-                <h2 class="text-2xl font-bold mb-4">Verifikasi Voucer</h2>
+            <div id="tab-admin-verifikasi" class="hidden-tab bg-white p-6 rounded-lg shadow border-t-4 border-green-700">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Verifikasi Voucer</h2>
                 <div class="flex flex-col md:flex-row gap-4 mb-6">
-                    <input type="text" id="verify-code" placeholder="Masukkan Kode Voucer" class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
-                    <button onclick="verifyVoucher()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-medium">Verifikasi</button>
+                    <input type="text" id="verify-code" placeholder="Masukkan Kode Voucer" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600">
+                    <button onclick="verifyVoucher()" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 font-medium shadow-sm transition">Verifikasi</button>
                 </div>
                 <div id="verify-result" class="hidden bg-gray-50 p-4 border rounded-lg"></div>
             </div>
 
             <!-- ADMIN: MARKETING -->
             <div id="tab-admin-marketing" class="hidden-tab">
-                <!-- Tombol Toggle Form Buat Akun -->
                 <div class="mb-4">
-                    <button id="btn-toggle-marketing" onclick="toggleFormMarketing()" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 font-semibold shadow transition flex items-center gap-2">
+                    <button id="btn-toggle-marketing" onclick="toggleFormMarketing()" class="bg-green-700 text-white px-5 py-2.5 rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                         Buat Akun Marketing Baru
                     </button>
                 </div>
 
-                <!-- Form Buat Akun Marketing (Sembunyi by default) -->
-                <div id="form-marketing-container" class="bg-white p-6 rounded-lg shadow mb-6 hidden">
-                    <h2 class="text-2xl font-bold mb-4">Buat Akun Marketing</h2>
+                <div id="form-marketing-container" class="bg-white p-6 rounded-lg shadow mb-6 hidden border-t-4 border-green-700">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Buat Akun Marketing</h2>
                     <form onsubmit="createMarketingAccount(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                            <input type="text" id="new-mkt-name" required class="w-full px-3 py-2 border rounded-lg">
+                            <input type="text" id="new-mkt-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                            <input type="text" id="new-mkt-username" required class="w-full px-3 py-2 border rounded-lg">
+                            <input type="text" id="new-mkt-username" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <input type="text" id="new-mkt-password" required class="w-full px-3 py-2 border rounded-lg">
+                            <input type="text" id="new-mkt-password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
                         </div>
-                        <div class="md:col-span-3">
-                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Simpan Akun</button>
+                        <div class="md:col-span-3 mt-2">
+                            <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 font-semibold transition shadow-sm">Simpan Akun</button>
                         </div>
                     </form>
                 </div>
 
-                <!-- Daftar Tabel Akun Marketing -->
-                <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
-                    <h2 class="text-xl font-bold mb-4">Daftar Akun Marketing</h2>
+                <div class="bg-white p-6 rounded-lg shadow overflow-x-auto border-t-4 border-green-700">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Daftar Akun Marketing</h2>
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead>
-                            <tr class="bg-gray-100 border-b">
-                                <th class="p-3">Nama Lengkap</th>
-                                <th class="p-3">Username</th>
-                                <th class="p-3">Password</th>
-                                <th class="p-3 text-center">Aksi</th>
+                            <tr class="bg-green-50 border-b border-green-200">
+                                <th class="p-3 text-green-900">Nama Lengkap</th>
+                                <th class="p-3 text-green-900">Username</th>
+                                <th class="p-3 text-green-900">Password</th>
+                                <th class="p-3 text-center text-green-900">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="marketing-list-body"></tbody>
@@ -161,57 +162,54 @@
 
             <!-- DATA PENJUALAN (ADMIN & USER) -->
             <div id="tab-data-penjualan" class="hidden-tab">
-                <!-- Tombol Toggle Form Input Penjualan -->
                 <div class="mb-4 hidden" id="btn-toggle-penjualan-container">
-                    <button id="btn-toggle-penjualan" onclick="toggleFormPenjualan()" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 font-semibold shadow transition flex items-center gap-2">
+                    <button id="btn-toggle-penjualan" onclick="toggleFormPenjualan()" class="bg-green-700 text-white px-5 py-2.5 rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         Tambah Penjualan Baru
                     </button>
                 </div>
 
-                <!-- Form Penjualan (Sembunyi by default) -->
-                <div class="bg-white p-6 rounded-lg shadow mb-6 hidden" id="form-tambah-penjualan">
-                    <h2 class="text-2xl font-bold mb-4">Input Data Penjualan Baru</h2>
+                <div class="bg-white p-6 rounded-lg shadow mb-6 hidden border-t-4 border-green-700" id="form-tambah-penjualan">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Input Data Penjualan Baru</h2>
                     <form onsubmit="submitPenjualan(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="penj-pembeli" placeholder="Nama Pembeli" required class="px-3 py-2 border rounded-lg">
-                        <input type="text" id="penj-nohp" placeholder="No. HP" required class="px-3 py-2 border rounded-lg">
-                        <input type="text" id="penj-alamat" placeholder="Alamat" required class="px-3 py-2 border rounded-lg md:col-span-2">
-                        <input type="text" id="penj-kategori" placeholder="Kategori (Opsional)" class="px-3 py-2 border rounded-lg">
-                        <select id="penj-produk" required class="px-3 py-2 border rounded-lg">
+                        <input type="text" id="penj-pembeli" placeholder="Nama Pembeli" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
+                        <input type="text" id="penj-nohp" placeholder="No. HP" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
+                        <input type="text" id="penj-alamat" placeholder="Alamat Lengkap" required class="px-3 py-2 border border-gray-300 rounded-lg md:col-span-2 focus:border-green-600 focus:outline-none">
+                        <input type="text" id="penj-kategori" placeholder="Kategori (Opsional)" class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
+                        <select id="penj-produk" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none bg-white">
                             <option value="">-- Pilih Produk --</option>
                             <option value="Laptop">Laptop</option>
                             <option value="Komputer">Komputer</option>
                             <option value="Printer">Printer</option>
                             <option value="Komputer Printer">Komputer Printer</option>
                         </select>
-                        <input type="text" id="penj-voucer" placeholder="Kode Voucer Klaim (Opsional)" class="px-3 py-2 border rounded-lg">
-                        <input type="number" id="penj-harga" placeholder="Harga Final (Rp)" required class="px-3 py-2 border rounded-lg">
+                        <input type="text" id="penj-voucer" placeholder="Kode Voucer Klaim (Opsional)" class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
+                        <input type="number" id="penj-harga" placeholder="Harga Final (Rp)" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
                         
                         <div class="md:col-span-2 flex justify-end mt-2">
-                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Simpan Penjualan</button>
+                            <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 font-semibold transition shadow-sm">Simpan Penjualan</button>
                         </div>
                     </form>
                 </div>
 
-                <!-- Tabel Data Penjualan -->
-                <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
+                <div class="bg-white p-6 rounded-lg shadow overflow-x-auto border-t-4 border-green-700">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Tabel Data Penjualan</h2>
-                        <button onclick="loadPenjualan()" class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">Refresh</button>
+                        <h2 class="text-xl font-bold text-gray-800">Tabel Data Penjualan</h2>
+                        <button onclick="loadPenjualan()" class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 text-gray-800 font-medium transition">Refresh</button>
                     </div>
                     <table class="w-full text-left border-collapse text-sm min-w-[800px]">
                         <thead>
-                            <tr class="bg-gray-100 border-b">
-                                <th class="p-2">No</th>
-                                <th class="p-2">Waktu Input</th>
-                                <th class="p-2">Marketing</th>
-                                <th class="p-2">Pembeli</th>
-                                <th class="p-2">No. HP</th>
-                                <th class="p-2">Alamat</th>
-                                <th class="p-2">Kategori</th>
-                                <th class="p-2">Produk</th>
-                                <th class="p-2">Voucer Klaim</th>
-                                <th class="p-2">Harga Final</th>
+                            <tr class="bg-green-50 border-b border-green-200">
+                                <th class="p-2 text-green-900">No</th>
+                                <th class="p-2 text-green-900">Waktu Input</th>
+                                <th class="p-2 text-green-900">Marketing</th>
+                                <th class="p-2 text-green-900">Pembeli</th>
+                                <th class="p-2 text-green-900">No. HP</th>
+                                <th class="p-2 text-green-900">Alamat</th>
+                                <th class="p-2 text-green-900">Kategori</th>
+                                <th class="p-2 text-green-900">Produk</th>
+                                <th class="p-2 text-green-900">Voucer Klaim</th>
+                                <th class="p-2 text-green-900">Harga Final</th>
                             </tr>
                         </thead>
                         <tbody id="penjualan-list-body"></tbody>
@@ -220,20 +218,32 @@
             </div>
 
             <!-- ADMIN: PENGATURAN AKUN -->
-            <div id="tab-admin-pengaturan" class="hidden-tab bg-white p-6 rounded-lg shadow">
-                <h2 class="text-2xl font-bold mb-4">Pengaturan Akun & Sistem</h2>
+            <div id="tab-admin-pengaturan" class="hidden-tab bg-white p-6 rounded-lg shadow border-t-4 border-green-700">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Pengaturan Akun & Sistem</h2>
+                
+                <!-- Pengaturan Masa Berlaku Voucer -->
                 <div class="mb-8 border-b pb-6">
-                    <h3 class="text-lg font-semibold mb-3">Ubah Kredensial Admin</h3>
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">Pengaturan Voucer</h3>
+                    <label class="block text-sm text-gray-700 mb-2">Masa Berlaku Voucer Otomatis (Hari)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="number" id="setting-masa-berlaku" min="1" max="30" placeholder="1-30" class="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600">
+                        <button onclick="updateMasaBerlaku()" class="bg-green-700 text-white px-5 py-2 rounded-lg hover:bg-green-800 transition shadow-sm font-medium">Simpan Masa Berlaku</button>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Menentukan berapa hari voucer berlaku dihitung dari tanggal pembuatan (Maksimal 30 Hari).</p>
+                </div>
+
+                <div class="mb-8 border-b pb-6">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">Ubah Kredensial Admin</h3>
                     <form onsubmit="updateAdminCreds(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
-                        <input type="text" id="update-admin-user" placeholder="Username Admin Baru" required class="px-3 py-2 border rounded-lg">
-                        <input type="password" id="update-admin-pass" placeholder="Password Admin Baru" required class="px-3 py-2 border rounded-lg">
-                        <button type="submit" class="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 md:col-span-2 font-semibold">Ubah Data Admin</button>
+                        <input type="text" id="update-admin-user" placeholder="Username Admin Baru" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
+                        <input type="password" id="update-admin-pass" placeholder="Password Admin Baru" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
+                        <button type="submit" class="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 md:col-span-2 font-semibold shadow-sm transition">Ubah Data Admin</button>
                     </form>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold mb-3">Akses Menu User</h3>
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">Akses Menu User</h3>
                     <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" id="setting-akses-penjualan" onchange="toggleAksesPenjualan(this.checked)" class="w-5 h-5 text-blue-600">
+                        <input type="checkbox" id="setting-akses-penjualan" onchange="toggleAksesPenjualan(this.checked)" class="w-5 h-5 text-green-700 accent-green-700">
                         <span class="text-gray-700 font-medium">Buka Menu Data Penjualan untuk User / Marketing</span>
                     </label>
                     <p class="text-sm text-gray-500 mt-1">Jika dicentang, User (Marketing) dapat melihat tab Data Penjualan.</p>
@@ -242,51 +252,59 @@
 
             <!-- USER: BUAT VOUCER -->
             <div id="tab-user-buatvoucer" class="hidden-tab">
-                <div class="bg-white p-6 rounded-lg shadow mb-6">
-                    <h2 class="text-2xl font-bold mb-4">Buat Voucer Baru</h2>
+                <div class="bg-white p-6 rounded-lg shadow mb-6 border-t-4 border-green-700">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Buat Voucer Baru</h2>
                     <form onsubmit="generateVoucher(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm text-gray-700 mb-1">Nama Pelanggan</label>
-                            <input type="text" id="v-pelanggan" required class="w-full px-3 py-2 border rounded-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pelanggan</label>
+                            <input type="text" id="v-pelanggan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
                         </div>
                         <div>
-                            <label class="block text-sm text-gray-700 mb-1">Alamat</label>
-                            <input type="text" id="v-alamat" required class="w-full px-3 py-2 border rounded-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">No WA</label>
+                            <input type="text" id="v-nowa" placeholder="Contoh: 08123456789" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
                         </div>
                         <div>
-                            <label class="block text-sm text-gray-700 mb-1">Berlaku Sampai (Tanggal)</label>
-                            <input type="date" id="v-tanggal" required class="w-full px-3 py-2 border rounded-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Desa / Kelurahan</label>
+                            <input type="text" id="v-desa" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kecamatan</label>
+                            <input type="text" id="v-kecamatan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
+                        </div>
+                        <!-- Tanggal expired otomatis terhitung di backend -->
                         <div class="md:col-span-2 mt-2">
-                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">Buat & Simpan Voucer</button>
+                            <button type="submit" class="bg-green-700 text-white px-6 py-2.5 rounded-lg hover:bg-green-800 font-semibold transition shadow-md w-full md:w-auto">Buat & Simpan Voucer</button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Tampilan Voucer Baru -->
-                <div id="new-voucher-display" class="hidden bg-white p-6 rounded-lg shadow border-2 border-blue-100 flex flex-col items-center text-center">
-                    <h3 class="text-lg font-bold text-gray-500 mb-2">Voucer Berhasil Dibuat!</h3>
+                <div id="new-voucher-display" class="hidden bg-white p-6 rounded-lg shadow border-2 border-green-100 flex flex-col items-center text-center">
+                    <h3 class="text-lg font-bold text-gray-500 mb-4">Voucer Berhasil Dibuat!</h3>
                     
                     <!-- Canvas (Hidden logic, used for image download) -->
                     <canvas id="voucherCanvas" width="600" height="300" class="hidden"></canvas>
                     
                     <!-- HTML Visual Representation -->
-                    <div class="w-full max-w-md bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white shadow-lg relative overflow-hidden mb-6">
-                        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full"></div>
-                        <h4 class="text-2xl font-bold uppercase tracking-wider mb-1">Diskon Spesial</h4>
-                        <p class="text-blue-100 text-sm mb-4" id="disp-v-pelanggan">Kepada: -</p>
-                        <div class="bg-white text-blue-900 font-mono text-3xl py-2 px-4 rounded font-bold tracking-widest inline-block mb-4" id="disp-v-kode">
+                    <div class="w-full max-w-md bg-gradient-to-br from-green-700 to-green-900 rounded-xl p-6 text-white shadow-xl relative overflow-hidden mb-6">
+                        <div class="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-white opacity-10 rounded-full"></div>
+                        <h4 class="text-2xl font-bold uppercase tracking-wider mb-2 drop-shadow-md">Diskon Spesial</h4>
+                        <div class="text-left bg-black bg-opacity-20 p-3 rounded-lg mb-4">
+                            <p class="text-green-50 font-medium" id="disp-v-pelanggan">Kepada: -</p>
+                            <p class="text-green-100 text-sm mt-1" id="disp-v-detail">WA: - | Desa: -, Kec: -</p>
+                        </div>
+                        <div class="bg-white text-green-900 font-mono text-3xl py-3 px-5 rounded-lg font-bold tracking-widest inline-block mb-4 shadow-inner" id="disp-v-kode">
                             XXXX-XXXX
                         </div>
-                        <p class="text-sm">Berlaku s/d: <span id="disp-v-tanggal" class="font-bold"></span></p>
+                        <p class="text-sm bg-green-900 bg-opacity-50 py-1.5 px-3 rounded inline-block">Berlaku s/d: <span id="disp-v-tanggal" class="font-bold text-green-200"></span></p>
                     </div>
 
                     <div class="flex gap-4 flex-wrap justify-center">
-                        <button onclick="shareToWA()" class="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition font-medium">
+                        <button onclick="shareToWA()" class="flex items-center bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition font-medium shadow-sm">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                             Bagikan ke WA
                         </button>
-                        <button onclick="downloadVoucherImage()" class="flex items-center bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition font-medium">
+                        <button onclick="downloadVoucherImage()" class="flex items-center bg-gray-800 text-white px-5 py-2.5 rounded-lg hover:bg-gray-900 transition font-medium shadow-sm">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             Download Gambar
                         </button>
@@ -295,20 +313,22 @@
             </div>
 
             <!-- USER: DAFTAR VOUCER -->
-            <div id="tab-user-daftarvoucer" class="hidden-tab bg-white p-6 rounded-lg shadow overflow-x-auto">
+            <div id="tab-user-daftarvoucer" class="hidden-tab bg-white p-6 rounded-lg shadow overflow-x-auto border-t-4 border-green-700">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold">Daftar Voucer Anda</h2>
-                    <button onclick="loadVouchers()" class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300">Refresh</button>
+                    <h2 class="text-xl font-bold text-gray-800">Daftar Voucer Anda</h2>
+                    <button onclick="loadVouchers()" class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 text-gray-800 font-medium transition">Refresh</button>
                 </div>
-                <table class="w-full text-left border-collapse text-sm min-w-[700px]">
+                <table class="w-full text-left border-collapse text-sm min-w-[900px]">
                     <thead>
-                        <tr class="bg-gray-100 border-b">
-                            <th class="p-2">Kode</th>
-                            <th class="p-2">Pelanggan</th>
-                            <th class="p-2">Alamat</th>
-                            <th class="p-2">Berlaku Sampai</th>
-                            <th class="p-2">Status</th>
-                            <th class="p-2 text-center">Aksi</th>
+                        <tr class="bg-green-50 border-b border-green-200">
+                            <th class="p-2 text-green-900">Kode</th>
+                            <th class="p-2 text-green-900">Pelanggan</th>
+                            <th class="p-2 text-green-900">No WA</th>
+                            <th class="p-2 text-green-900">Desa/Kel</th>
+                            <th class="p-2 text-green-900">Kecamatan</th>
+                            <th class="p-2 text-green-900">Berlaku Sampai</th>
+                            <th class="p-2 text-green-900">Status</th>
+                            <th class="p-2 text-center text-green-900">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="voucher-list-body"></tbody>
@@ -319,26 +339,26 @@
     </div>
 
     <!-- MODAL EDIT MARKETING -->
-    <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden flex justify-center items-center p-4">
-        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+    <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex justify-center items-center p-4">
+        <div class="bg-white p-6 rounded-lg shadow-2xl w-full max-w-md border-t-4 border-green-700">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Edit Akun Marketing</h2>
             <form id="form-edit-marketing" onsubmit="submitEditMarketing(event)">
                 <input type="hidden" id="edit-mkt-id">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                    <input type="text" id="edit-mkt-name" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                    <input type="text" id="edit-mkt-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600">
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                    <input type="text" id="edit-mkt-username" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                    <input type="text" id="edit-mkt-username" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600">
                 </div>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="text" id="edit-mkt-password" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                    <input type="text" id="edit-mkt-password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600">
                 </div>
                 <div class="flex justify-end space-x-3">
-                    <button type="button" onclick="closeEditMarketing()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Simpan Perubahan</button>
+                    <button type="button" onclick="closeEditMarketing()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-medium">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition font-medium shadow-sm">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
@@ -347,16 +367,17 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // State Application
-        let currentUser = null; // { username, name, role }
-        let appSettings = { aksesPenjualanUser: false };
-        let activeVoucherData = null; // Untuk keperluan download/share
+        let currentUser = null; 
+        let appSettings = { aksesPenjualanUser: 'false', masaAktifVoucer: '30' };
+        let activeVoucherData = null; 
 
         // Cek Login Session saat load
         window.onload = () => {
             const savedUser = sessionStorage.getItem('authUser');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
-                initDashboard();
+                // Kita perlu reload setingan agar up to date
+                silentReloadSettings();
             }
         };
 
@@ -364,7 +385,6 @@
         function showLoading() { document.getElementById('loading').classList.remove('hidden'); }
         function hideLoading() { document.getElementById('loading').classList.add('hidden'); }
         
-        // Logika Dropdown Hamburger Menu & klik di luar untuk menutup
         function toggleSidebar(e) {
             if (e) e.stopPropagation();
             const sidebar = document.getElementById('sidebar');
@@ -382,14 +402,12 @@
             }
         }
 
-        // Event listener klik luar untuk menutup menu hamberger
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const hamburgerBtn = document.getElementById('hamburger-btn');
             
             if (window.innerWidth < 768) {
                 if (sidebar && !sidebar.classList.contains('hidden')) {
-                    // Jika klik di luar sidebar dan bukan klik pada tombol hamburger
                     if (!sidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
                         closeSidebar();
                     }
@@ -397,7 +415,6 @@
             }
         });
 
-        // Toggle Form Marketing
         function toggleFormMarketing() {
             const formContainer = document.getElementById('form-marketing-container');
             const btn = document.getElementById('btn-toggle-marketing');
@@ -416,7 +433,6 @@
             }
         }
 
-        // Toggle Form Penjualan
         function toggleFormPenjualan() {
             const formContainer = document.getElementById('form-tambah-penjualan');
             const btn = document.getElementById('btn-toggle-penjualan');
@@ -439,12 +455,11 @@
             const t = document.getElementById('toast');
             const tc = document.getElementById('toast-content');
             tc.textContent = msg;
-            tc.className = `px-6 py-3 rounded shadow-lg font-medium text-white ${isError ? 'bg-red-600' : 'bg-green-600'}`;
+            tc.className = `px-6 py-3 rounded shadow-lg font-medium text-white ${isError ? 'bg-red-600' : 'bg-green-700'}`;
             t.classList.remove('translate-x-full', 'opacity-0');
             setTimeout(() => { t.classList.add('translate-x-full', 'opacity-0'); }, 3000);
         }
 
-        // Generic API Caller
         async function callGAS(action, payload = {}) {
             if (GAS_URL === "URL_WEB_APP_GAS_ANDA_DISINI") {
                 showToast("Error: Anda belum memasukkan URL Web App GAS di index.html!", true);
@@ -464,6 +479,15 @@
             }
         }
 
+        async function silentReloadSettings() {
+            // Reload settings di background untuk memastikan variabel update
+            const res = await callGAS('getSettings');
+            if (res.status === 'success') {
+                appSettings = res.data;
+            }
+            initDashboard();
+        }
+
         // 1. AUTHENTICATION
         async function handleLogin(e) {
             e.preventDefault();
@@ -476,7 +500,7 @@
 
             if (res.status === 'success') {
                 currentUser = res.data;
-                appSettings = res.settings; // Load global settings
+                appSettings = res.settings; 
                 sessionStorage.setItem('authUser', JSON.stringify(currentUser));
                 initDashboard();
             } else {
@@ -489,12 +513,14 @@
             currentUser = null;
             document.getElementById('app-layout').classList.add('hidden');
             document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('login-page').classList.add('flex'); // restore flex display
             document.getElementById('login-form').reset();
         }
 
         // 2. DASHBOARD INITIALIZATION
         function initDashboard() {
             document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('login-page').classList.remove('flex');
             document.getElementById('app-layout').classList.remove('hidden');
             document.getElementById('user-info-display').textContent = `${currentUser.name} (${currentUser.role})`;
             
@@ -503,12 +529,13 @@
             // Set initial settings state in Admin Panel
             if (currentUser.role === 'Admin') {
                 document.getElementById('setting-akses-penjualan').checked = appSettings.aksesPenjualanUser === 'true';
+                document.getElementById('setting-masa-berlaku').value = appSettings.masaAktifVoucer || 30;
             }
         }
 
         function buildMenu() {
             const menuContainer = document.getElementById('sidebar-menu');
-            menuContainer.innerHTML = ''; // Clear
+            menuContainer.innerHTML = ''; 
 
             const menus = [];
             if (currentUser.role === 'Admin') {
@@ -517,15 +544,12 @@
                 menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' });
                 menus.push({ id: 'admin-pengaturan', label: 'Pengaturan Akun', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' });
                 
-                // Form input disembunyikan untuk Admin di awal (Tombol toggle siap memunculkannya)
                 document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
                 document.getElementById('form-tambah-penjualan').classList.add('hidden');
             } else {
-                // User / Marketing
                 menus.push({ id: 'user-buatvoucer', label: 'Buat Voucer', icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6' });
                 menus.push({ id: 'user-daftarvoucer', label: 'Daftar Voucer', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' });
                 
-                // Cek Akses Penjualan
                 if (appSettings.aksesPenjualanUser === 'true') {
                     menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z' });
                     document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
@@ -539,20 +563,18 @@
             menus.forEach((m, idx) => {
                 const btn = document.createElement('a');
                 btn.href = "#";
-                btn.className = `flex items-center p-3 rounded-lg hover:bg-blue-800 transition ${idx===0 ? 'bg-blue-800' : ''}`;
+                btn.className = `flex items-center p-3 rounded-lg hover:bg-green-800 transition ${idx===0 ? 'bg-green-800' : ''}`;
                 btn.innerHTML = `<svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${m.icon}"></path></svg> ${m.label}`;
                 btn.onclick = (e) => {
                     e.preventDefault();
-                    // Reset Active styling
-                    Array.from(menuContainer.children).forEach(c => c.classList.remove('bg-blue-800'));
-                    btn.classList.add('bg-blue-800');
+                    Array.from(menuContainer.children).forEach(c => c.classList.remove('bg-green-800'));
+                    btn.classList.add('bg-green-800');
                     switchTab(`tab-${m.id}`);
-                    closeSidebar(); // auto close on mobile after selecting
+                    closeSidebar(); 
                 };
                 menuContainer.appendChild(btn);
             });
 
-            // Buka tab pertama otomatis
             switchTab(`tab-${menus[0].id}`);
         }
 
@@ -565,7 +587,6 @@
             const target = document.getElementById(tabId);
             if(target) {
                 target.style.display = 'block';
-                // Trigger specific data loads based on tab
                 if (tabId === 'tab-admin-marketing') loadMarketing();
                 if (tabId === 'tab-data-penjualan') loadPenjualan();
                 if (tabId === 'tab-user-daftarvoucer') loadVouchers();
@@ -587,17 +608,20 @@
             
             if (res.status === 'success') {
                 const v = res.data;
-                const statusColor = v.Status === 'Aktif' ? 'text-green-600' : 'text-red-600';
+                const statusColor = v.Status === 'Aktif' ? 'text-green-700 font-bold' : 'text-red-600 font-bold';
                 resDiv.innerHTML = `
-                    <h3 class="font-bold text-lg mb-2">Hasil Verifikasi: <span class="${statusColor}">${v.Status}</span></h3>
-                    <ul class="text-sm space-y-1">
-                        <li><strong>Kode:</strong> ${v.Kode}</li>
-                        <li><strong>Pelanggan:</strong> ${v.Pelanggan}</li>
-                        <li><strong>Berlaku Sampai:</strong> ${v['Berlaku Sampai']}</li>
-                        <li><strong>Pembuat (Marketing):</strong> ${v.Pembuat}</li>
-                    </ul>
+                    <h3 class="font-bold text-lg mb-2 text-gray-800">Hasil Verifikasi: <span class="${statusColor}">${v.Status}</span></h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm bg-white p-3 border rounded shadow-sm">
+                        <p><strong>Kode:</strong> <span class="font-mono text-green-700">${v.Kode}</span></p>
+                        <p><strong>Pelanggan:</strong> ${v.Pelanggan}</p>
+                        <p><strong>No WA:</strong> ${v['No WA']}</p>
+                        <p><strong>Desa/Kel:</strong> ${v['Desa/Kelurahan']}</p>
+                        <p><strong>Kecamatan:</strong> ${v.Kecamatan}</p>
+                        <p><strong>Berlaku Sampai:</strong> ${v['Berlaku Sampai']}</p>
+                        <p><strong>Pembuat (Marketing):</strong> ${v.Pembuat}</p>
+                    </div>
                     ${v.Status === 'Aktif' ? 
-                    `<button onclick="claimVoucher('${v.Kode}')" class="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 text-sm">Gunakan/Klaim Voucer Ini</button>` 
+                    `<button onclick="claimVoucher('${v.Kode}')" class="mt-4 bg-yellow-600 text-white px-5 py-2 rounded hover:bg-yellow-700 font-medium shadow-sm">Gunakan/Klaim Voucer Ini</button>` 
                     : ''}
                 `;
             } else {
@@ -612,7 +636,7 @@
             hideLoading();
             if(res.status === 'success') {
                 showToast("Voucer berhasil diklaim!");
-                verifyVoucher(); // Refresh result
+                verifyVoucher(); 
             } else {
                 showToast(res.message, true);
             }
@@ -631,8 +655,8 @@
             if (res.status === 'success') {
                 showToast("Akun Marketing Berhasil Dibuat");
                 e.target.reset();
-                toggleFormMarketing(); // Sembunyikan form kembali
-                loadMarketing(); // Refresh table
+                toggleFormMarketing(); 
+                loadMarketing(); 
             } else {
                 showToast(res.message, true);
             }
@@ -645,13 +669,13 @@
             if(res.status === 'success') {
                 res.data.forEach(user => {
                     const tr = document.createElement('tr');
-                    tr.className = "border-b hover:bg-gray-50";
+                    tr.className = "border-b hover:bg-green-50 transition";
                     tr.innerHTML = `
                         <td class="p-3">${user.Nama}</td>
                         <td class="p-3">${user.Username}</td>
                         <td class="p-3 text-gray-500">${user.Password}</td>
                         <td class="p-3 text-center">
-                            <button onclick="openEditMarketing('${user.ID}', '${user.Nama}', '${user.Username}', '${user.Password}')" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm font-semibold transition">Edit</button>
+                            <button onclick="openEditMarketing('${user.ID}', '${user.Nama}', '${user.Username}', '${user.Password}')" class="bg-yellow-500 text-white px-3 py-1.5 rounded hover:bg-yellow-600 text-sm font-semibold transition shadow-sm">Edit</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -659,7 +683,6 @@
             }
         }
 
-        // Edit Marketing Modal Operations
         function openEditMarketing(id, nama, username, password) {
             document.getElementById('edit-mkt-id').value = id;
             document.getElementById('edit-mkt-name').value = nama;
@@ -687,7 +710,7 @@
             if (res.status === 'success') {
                 showToast("Akun Marketing Berhasil Diperbarui");
                 closeEditMarketing();
-                loadMarketing(); // Refresh table
+                loadMarketing(); 
             } else {
                 showToast(res.message, true);
             }
@@ -713,12 +736,28 @@
             const res = await callGAS('updateSetting', { key: 'aksesPenjualanUser', value: isChecked.toString() });
             hideLoading();
             if(res.status === 'success') {
-                showToast("Pengaturan akses disimpan.");
+                showToast("Akses Data Penjualan diperbarui.");
                 appSettings.aksesPenjualanUser = isChecked.toString();
-                buildMenu(); // Re-build menu to update sales page availability
+                buildMenu(); 
             } else {
                 showToast("Gagal mengubah pengaturan.", true);
-                document.getElementById('setting-akses-penjualan').checked = !isChecked; // Revert
+                document.getElementById('setting-akses-penjualan').checked = !isChecked; 
+            }
+        }
+
+        async function updateMasaBerlaku() {
+            const hari = document.getElementById('setting-masa-berlaku').value;
+            if(!hari || hari < 1 || hari > 30) {
+                return showToast("Masukkan hari antara 1 sampai 30!", true);
+            }
+            showLoading();
+            const res = await callGAS('updateSetting', { key: 'masaAktifVoucer', value: hari.toString() });
+            hideLoading();
+            if(res.status === 'success') {
+                showToast("Masa berlaku voucer diperbarui.");
+                appSettings.masaAktifVoucer = hari.toString();
+            } else {
+                showToast("Gagal menyimpan masa berlaku.", true);
             }
         }
 
@@ -737,27 +776,31 @@
         async function generateVoucher(e) {
             e.preventDefault();
             const pel = document.getElementById('v-pelanggan').value;
-            const al = document.getElementById('v-alamat').value;
-            const tgl = document.getElementById('v-tanggal').value;
+            const nowa = document.getElementById('v-nowa').value;
+            const desa = document.getElementById('v-desa').value;
+            const kecamatan = document.getElementById('v-kecamatan').value;
             const kode = generateRandomCode();
 
             showLoading();
             const res = await callGAS('createVoucher', {
-                kode, pelanggan: pel, alamat: al, tanggal: tgl, pembuat: currentUser.name
+                kode, pelanggan: pel, nowa: nowa, desa: desa, kecamatan: kecamatan, pembuat: currentUser.name
             });
             hideLoading();
 
             if (res.status === 'success') {
                 showToast("Voucer Berhasil Disimpan!");
                 
+                const tglExpired = res.data.berlakuSampai; // didapat dari perhitungan GAS
+                
                 // Show display
                 document.getElementById('disp-v-pelanggan').textContent = `Kepada: ${pel}`;
+                document.getElementById('disp-v-detail').textContent = `WA: ${nowa} | Desa: ${desa}, Kec: ${kecamatan}`;
                 document.getElementById('disp-v-kode').textContent = kode;
-                document.getElementById('disp-v-tanggal').textContent = tgl;
+                document.getElementById('disp-v-tanggal').textContent = tglExpired;
                 document.getElementById('new-voucher-display').classList.remove('hidden');
                 
                 // Save state for share/download
-                activeVoucherData = { kode, pelanggan: pel, tanggal: tgl };
+                activeVoucherData = { kode, pelanggan: pel, nowa, desa, kecamatan, tanggal: tglExpired };
                 
                 e.target.reset();
             } else {
@@ -774,18 +817,20 @@
             tbody.innerHTML = '';
             if(res.status === 'success') {
                 res.data.forEach(v => {
-                    const statusClass = v.Status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                    const statusClass = v.Status === 'Aktif' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200';
                     const tr = document.createElement('tr');
-                    tr.className = "border-b hover:bg-gray-50";
+                    tr.className = "border-b hover:bg-green-50 transition whitespace-nowrap";
                     tr.innerHTML = `
-                        <td class="p-2 font-bold">${v.Kode}</td>
-                        <td class="p-2">${v.Pelanggan}</td>
-                        <td class="p-2">${v.Alamat}</td>
+                        <td class="p-2 font-mono font-bold text-green-700">${v.Kode}</td>
+                        <td class="p-2 font-medium">${v.Pelanggan}</td>
+                        <td class="p-2">${v['No WA']}</td>
+                        <td class="p-2">${v['Desa/Kelurahan']}</td>
+                        <td class="p-2">${v.Kecamatan}</td>
                         <td class="p-2">${v['Berlaku Sampai']}</td>
-                        <td class="p-2"><span class="px-2 py-1 rounded text-xs ${statusClass}">${v.Status}</span></td>
+                        <td class="p-2"><span class="px-2 py-1 rounded text-xs font-bold shadow-sm ${statusClass}">${v.Status}</span></td>
                         <td class="p-2 text-center flex gap-1 justify-center">
-                            <button onclick="shareSingleWA('${v.Kode}', '${v['Berlaku Sampai']}')" class="bg-green-500 text-white p-1.5 rounded hover:bg-green-600 text-xs font-semibold" title="Share WA">WA</button>
-                            <button onclick="drawAndDownloadVoucher('${v.Kode}', '${v.Pelanggan}', '${v['Berlaku Sampai']}')" class="bg-gray-700 text-white p-1.5 rounded hover:bg-gray-800 text-xs font-semibold" title="Download">DL</button>
+                            <button onclick="shareSingleWA('${v.Kode}', '${v['Berlaku Sampai']}')" class="bg-green-600 text-white px-2 py-1.5 rounded hover:bg-green-700 text-xs font-semibold shadow-sm" title="Share WA">WA</button>
+                            <button onclick="drawAndDownloadVoucher('${v.Kode}', '${v.Pelanggan}', '${v['No WA']}', '${v['Desa/Kelurahan']}', '${v.Kecamatan}', '${v['Berlaku Sampai']}')" class="bg-gray-700 text-white px-2 py-1.5 rounded hover:bg-gray-800 text-xs font-semibold shadow-sm" title="Download">DL</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -813,8 +858,8 @@
             if (res.status === 'success') {
                 showToast("Data Penjualan Berhasil Disimpan");
                 e.target.reset();
-                toggleFormPenjualan(); // Sembunyikan form kembali
-                loadPenjualan(); // Refresh table
+                toggleFormPenjualan(); 
+                loadPenjualan(); 
             } else {
                 showToast("Gagal menyimpan data", true);
             }
@@ -831,7 +876,7 @@
                 let no = 1;
                 res.data.forEach(p => {
                     const tr = document.createElement('tr');
-                    tr.className = "border-b hover:bg-gray-50 whitespace-nowrap";
+                    tr.className = "border-b hover:bg-green-50 transition whitespace-nowrap";
                     tr.innerHTML = `
                         <td class="p-2">${no++}</td>
                         <td class="p-2">${p['Waktu Input']}</td>
@@ -841,8 +886,8 @@
                         <td class="p-2 truncate max-w-xs" title="${p.Alamat}">${p.Alamat}</td>
                         <td class="p-2">${p.Kategori}</td>
                         <td class="p-2">${p.Produk}</td>
-                        <td class="p-2 font-mono text-blue-600">${p['Voucer Klaim']}</td>
-                        <td class="p-2 text-right">Rp ${parseInt(p['Harga Final']).toLocaleString('id-ID')}</td>
+                        <td class="p-2 font-mono text-green-700 font-bold">${p['Voucer Klaim']}</td>
+                        <td class="p-2 text-right font-semibold">Rp ${parseInt(p['Harga Final']).toLocaleString('id-ID')}</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -863,48 +908,52 @@
 
         function downloadVoucherImage() {
             if(!activeVoucherData) return;
-            drawAndDownloadVoucher(activeVoucherData.kode, activeVoucherData.pelanggan, activeVoucherData.tanggal);
+            drawAndDownloadVoucher(activeVoucherData.kode, activeVoucherData.pelanggan, activeVoucherData.nowa, activeVoucherData.desa, activeVoucherData.kecamatan, activeVoucherData.tanggal);
         }
 
-        function drawAndDownloadVoucher(kode, pelanggan, tanggal) {
+        function drawAndDownloadVoucher(kode, pelanggan, nowa, desa, kecamatan, tanggal) {
             const canvas = document.getElementById('voucherCanvas');
             const ctx = canvas.getContext('2d');
             
-            // Bersihkan kanvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Background Gradien
+            // Background Gradien (Tema Hijau Tua)
             const grad = ctx.createLinearGradient(0, 0, 600, 300);
-            grad.addColorStop(0, '#2563eb'); // blue-600
-            grad.addColorStop(1, '#9333ea'); // purple-600
+            grad.addColorStop(0, '#15803d'); // green-700
+            grad.addColorStop(1, '#14532d'); // green-900
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 600, 300);
 
             // Ornamen Lingkaran
             ctx.beginPath();
             ctx.arc(600, 0, 150, 0, 2 * Math.PI);
-            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.fillStyle = 'rgba(255,255,255,0.08)';
             ctx.fill();
 
             // Teks Judul
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 36px sans-serif';
-            ctx.fillText('DISKON SPESIAL', 40, 70);
+            ctx.fillText('DISKON SPESIAL', 40, 60);
 
-            // Teks Kepada
-            ctx.font = '20px sans-serif';
-            ctx.fillStyle = '#dbeafe'; // blue-100
-            ctx.fillText(`Kepada: ${pelanggan}`, 40, 110);
+            // Teks Info Pelanggan
+            ctx.font = '22px sans-serif';
+            ctx.fillStyle = '#dcfce7'; // green-100
+            ctx.fillText(`Kepada: ${pelanggan}`, 40, 100);
+
+            // Teks Alamat & WA
+            ctx.font = '16px sans-serif';
+            ctx.fillStyle = '#bbf7d0'; // green-200
+            ctx.fillText(`WA: ${nowa} | Desa: ${desa}, Kec: ${kecamatan}`, 40, 125);
 
             // Kotak Kode
             ctx.fillStyle = '#ffffff';
-            ctx.roundRect ? ctx.roundRect(40, 140, 280, 60, 10) : ctx.fillRect(40, 140, 280, 60); 
+            ctx.roundRect ? ctx.roundRect(40, 145, 280, 60, 10) : ctx.fillRect(40, 145, 280, 60); 
             ctx.fill();
 
             // Teks Kode
-            ctx.fillStyle = '#1e3a8a'; // blue-900
+            ctx.fillStyle = '#14532d'; // green-900
             ctx.font = 'bold 32px monospace';
-            ctx.fillText(kode, 60, 180);
+            ctx.fillText(kode, 60, 185);
 
             // Teks Berlaku
             ctx.fillStyle = '#ffffff';
