@@ -459,7 +459,7 @@
             return dateStr; // fallback jika format tidak sesuai
         }
 
-        // Fungsi pembentuk kode voucer acak (Penting: Ditambahkan kembali agar fitur buat voucer berjalan!)
+        // Fungsi pembentuk kode voucer acak
         function generateRandomCode() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let result = '';
@@ -968,138 +968,154 @@
             drawAndDownloadVoucher(activeVoucherData.kode, activeVoucherData.pelanggan, activeVoucherData.nowa, activeVoucherData.desa, activeVoucherData.kecamatan, activeVoucherData.tanggal);
         }
 
-        // Render Canvas: Diperlebar menjadi 680x320 agar lebih proporsional, persis kartu visual pratinjau
+        // Render Canvas: Menyesuaikan 100% identik dengan tampilan screenshot card di layar
         function drawAndDownloadVoucher(kode, pelanggan, nowa, desa, kecamatan, tanggal) {
             const canvas = document.getElementById('voucherCanvas');
             const ctx = canvas.getContext('2d');
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // 1. Background Gradient Radial Merah Gelap Mewah (Sama dengan visual)
-            const grad = ctx.createRadialGradient(340, 160, 50, 340, 160, 400);
-            grad.addColorStop(0, '#be123c'); // rose-700 di tengah
-            grad.addColorStop(0.5, '#881337'); // rose-900 gelap
-            grad.addColorStop(1, '#4c0519'); // rose-950 sangat gelap di tepi
+            // 1. Diagonal Gradient Background (Sama persis dengan bg-gradient-to-br red-800 via-red-900 to-red-950)
+            const grad = ctx.createLinearGradient(0, 0, 680, 320);
+            grad.addColorStop(0, '#991b1b');    // red-800
+            grad.addColorStop(0.5, '#7f1d1d');  // red-900
+            grad.addColorStop(1, '#450a0a');    // red-950
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 680, 320);
 
-            // 2. Ornamen Lingkaran Emas Transparan di Pojok Kanan Atas dan Kiri Bawah (Aesthetic)
-            ctx.strokeStyle = 'rgba(250, 204, 21, 0.15)'; 
-            ctx.lineWidth = 1.5;
+            // 2. Ornamen Lingkaran Emas Aesthetic di Pojok (Sama persis dengan border-2 border-yellow-400 opacity-20)
+            ctx.strokeStyle = 'rgba(234, 179, 8, 0.2)'; 
+            ctx.lineWidth = 2;
             
             // Pojok Kanan Atas
             ctx.beginPath();
-            ctx.arc(680, 0, 90, 0, 2 * Math.PI);
+            ctx.arc(680, 0, 96, 0, 2 * Math.PI);
             ctx.stroke();
 
             // Pojok Kiri Bawah
             ctx.beginPath();
-            ctx.arc(0, 320, 90, 0, 2 * Math.PI);
+            ctx.arc(0, 320, 96, 0, 2 * Math.PI);
             ctx.stroke();
 
-            // 3. Bingkai Emas Ganda di Tepian Gambar (Gold Border)
-            ctx.strokeStyle = '#eab308'; // Gold-500
+            // 3. Bingkai Utama Emas Tipis (Sama persis dengan border-2 border-yellow-400)
+            ctx.strokeStyle = '#facc15'; // Yellow-400 / Gold
             ctx.lineWidth = 2;
-            ctx.strokeRect(15, 15, 650, 290); // Bingkai Luar
+            ctx.strokeRect(10, 10, 660, 300);
 
-            ctx.strokeStyle = 'rgba(234, 179, 8, 0.35)'; // Bingkai Dalam
-            ctx.lineWidth = 1;
-            ctx.strokeRect(21, 21, 638, 278);
-
-            // 4. Header Tengah: Brand "TURJA COMPUTER" Besar & Tebal
+            // 4. Header: Nama Toko diperbesar dan diletakkan di atas tengah
             ctx.textAlign = 'center';
-            ctx.fillStyle = '#facc15'; // Gold-400
-            ctx.font = 'black 28px "Arial Black", sans-serif'; 
-            ctx.fillText('TURJA COMPUTER', 340, 58);
+            ctx.fillStyle = '#facc15'; 
+            ctx.font = '900 24px sans-serif'; 
+            ctx.fillText('TURJA COMPUTER', 340, 48);
 
-            // Sub-header
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 11px "Arial", sans-serif';
-            ctx.fillText('VOUCHER DISKON EKSKLUSIF', 340, 78);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.fillText('Voucher Diskon Eksklusif', 340, 68);
 
-            // Garis Pembatas Header Emas Tipis
-            ctx.strokeStyle = 'rgba(250, 204, 21, 0.3)';
+            // Garis pembatas header
+            ctx.strokeStyle = 'rgba(234, 179, 8, 0.3)';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(200, 88);
-            ctx.lineTo(480, 88);
+            ctx.moveTo(180, 78);
+            ctx.lineTo(500, 78);
             ctx.stroke();
 
-            // 5. Box Penerima Transparan Gelap di Tengah (Center Aligned)
+            // 5. Data Penerima (RATA TENGAH / CENTER ALIGNED)
+            // Box penerima
             ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
             const boxX = 140;
-            const boxY = 102;
-            const boxWidth = 400;
-            const boxHeight = 94;
-            const radius = 8;
+            const boxY = 92;
+            const boxW = 400;
+            const boxH = 92;
             
             ctx.beginPath();
             if (ctx.roundRect) {
-                ctx.roundRect(boxX, boxY, boxWidth, boxHeight, radius);
+                ctx.roundRect(boxX, boxY, boxW, boxH, 8);
             } else {
-                ctx.rect(boxX, boxY, boxWidth, boxHeight);
+                ctx.rect(boxX, boxY, boxW, boxH);
             }
             ctx.fill();
             
-            ctx.strokeStyle = '#991b1b'; // Border box marun gelap
+            ctx.strokeStyle = 'rgba(153, 27, 27, 0.8)'; // border-red-800
             ctx.lineWidth = 1.5;
             ctx.stroke();
 
-            // Teks Informasi Penerima Rata Tengah (Center Aligned)
-            ctx.textAlign = 'center';
+            // Teks Informasi Penerima
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 22px "Arial", sans-serif';
-            ctx.fillText(pelanggan, 340, 130); // Nama Penerima
+            ctx.font = 'bold 20px sans-serif';
+            ctx.fillText(pelanggan, 340, 120); // Nama Penerima Besar
 
-            ctx.fillStyle = '#fde047'; // Kuning WA
-            ctx.font = 'bold 15px "Courier New", monospace';
-            ctx.fillText(nowa, 340, 154); // No WA
+            ctx.fillStyle = '#fde047'; // text-yellow-300
+            ctx.font = '500 14px sans-serif';
+            ctx.fillText(nowa, 340, 144); // No WA
 
-            ctx.fillStyle = '#e2e8f0'; // Alamat
-            ctx.font = '13px "Arial", sans-serif';
-            ctx.fillText(`${desa}, Kec. ${kecamatan}`, 340, 178); // Alamat gabungan
+            ctx.fillStyle = '#e2e8f0'; // text-gray-200
+            ctx.font = '12px sans-serif';
+            ctx.fillText(`${desa}, Kec. ${kecamatan}`, 340, 168); // Alamat gabungan
 
-            // 6. Sisi Kiri Bawah: Kode Voucer
-            ctx.textAlign = 'left'; 
+            // 6. Bagian Bawah: Kode Voucer & Nilai Diskon Besar
+            // Kode Voucer (Kiri)
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#d1d5db'; // text-gray-300
+            ctx.font = 'bold 9px sans-serif';
+            ctx.fillText('KODE VOUCER', 50, 208);
 
-            ctx.fillStyle = '#fca5a5';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText('KODE VOUCER', 40, 222);
-
-            // Kotak Putih Kode Voucer
+            // Box Putih Kode
             ctx.fillStyle = '#ffffff';
             if (ctx.roundRect) {
                 ctx.beginPath();
-                ctx.roundRect(40, 228, 220, 42, 6);
+                ctx.roundRect(50, 214, 180, 36, 6);
                 ctx.fill();
             } else {
-                ctx.fillRect(40, 228, 220, 42);
+                ctx.fillRect(50, 214, 180, 36);
             }
 
-            // Teks Kode di Dalam Kotak Putih (Center Aligned dalam kotak)
-            ctx.fillStyle = '#4c0519'; // red-950
-            ctx.font = 'bold 22px monospace';
+            // Teks Kode di dalam box
+            ctx.fillStyle = '#4c0519'; // text-red-950
+            ctx.font = 'bold 18px monospace';
             ctx.textAlign = 'center';
-            ctx.fillText(kode, 150, 256);
+            ctx.fillText(kode, 140, 238);
 
-            // 7. Sisi Kanan Bawah: Nominal Diskon Emas Besar "100 Rb"
+            // Nilai Diskon (Kanan)
             ctx.textAlign = 'right';
+            ctx.fillStyle = '#facc15'; // text-yellow-400
+            ctx.font = 'bold 9px sans-serif';
+            ctx.fillText('NILAI', 630, 208);
 
-            ctx.fillStyle = '#fde047';
+            ctx.fillStyle = '#facc15'; // text-yellow-400
+            ctx.font = '900 32px sans-serif';
+            ctx.fillText('100 Rb', 630, 242);
+
+            // 7. Tanggal Kedaluwarsa di bagian paling bawah
+            // Garis Pembatas Expiry
+            ctx.strokeStyle = 'rgba(153, 27, 27, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(180, 268);
+            ctx.lineTo(500, 268);
+            ctx.stroke();
+
+            // Teks Expiry Rata Tengah Kombinasi Warna
+            const text1 = "Berlaku s/d: ";
+            const text2 = tanggal;
+            
+            ctx.font = '10px sans-serif';
+            const w1 = ctx.measureText(text1).width;
             ctx.font = 'bold 10px sans-serif';
-            ctx.fillText('NILAI VOUCHER', 640, 222);
+            const w2 = ctx.measureText(text2).width;
+            
+            const startX = 340 - (w1 + w2) / 2;
+            ctx.textAlign = 'left';
+            
+            ctx.fillStyle = '#d1d5db'; // text-gray-300
+            ctx.font = '10px sans-serif';
+            ctx.fillText(text1, startX, 286);
+            
+            ctx.fillStyle = '#facc15'; // text-yellow-400
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText(text2, startX + w1, 286);
 
-            ctx.fillStyle = '#facc15'; // Gold
-            ctx.font = 'black 52px "Arial Black", sans-serif';
-            ctx.fillText('100 Rb', 640, 266);
-
-            // 8. Teks Berlaku Sampai di Bagian Paling Bawah Tengah
-            ctx.textAlign = 'center';
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-            ctx.font = '11px "Arial", sans-serif';
-            ctx.fillText(`Berlaku s/d: ${tanggal}`, 340, 292);
-
-            // Reset alignment ke default kiri
+            // Reset alignment ke default
             ctx.textAlign = 'left';
 
             // Trigger Download Hasil Render Gambar Canvas
