@@ -29,7 +29,7 @@
          GANTI URL DI BAWAH INI DENGAN URL WEB APP GAS ANDA
          ========================================== -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxVRttVODZ3HxfgK99UnHjLhvWI4yXKw8-S7E4t5tx_VSnLEMeKw5qZTNrX5bPuDKCGnw/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx5uYQY6HjAYFUbYh6FZ7Ny69U-V8yYaPth8gShFSwsi2-eI9HkP6hyGuCi-DoYqNI3/exec"; 
     </script>
 
     <!-- LOADING OVERLAY -->
@@ -77,8 +77,8 @@
         <!-- Navbar Mobile (Hamburger Menu Posisi Atas) -->
         <div id="mobile-navbar" class="md:hidden bg-green-800 text-white p-4 flex justify-between items-center z-30 sticky top-0 w-full shadow-md">
             <h1 class="font-bold text-lg">Dashboard</h1>
-            <button id="hamburger-btn" onclick="toggleSidebar(event)" class="focus:outline-none p-1.5 hover:bg-green-700 rounded transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <button onclick="logout()" class="focus:outline-none p-2 bg-red-700 hover:bg-red-800 rounded transition text-white" title="Logout">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
             </button>
         </div>
 
@@ -99,8 +99,11 @@
             </div>
         </div>
 
+        <!-- Bottom Navigation Mobile -->
+        <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 w-full bg-green-900 text-gray-300 z-40 flex justify-around items-center border-t border-green-950 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] overflow-x-auto px-1"></nav>
+
         <!-- Main Content -->
-        <div class="flex-1 bg-gray-100 p-4 md:p-8 w-full max-w-full overflow-x-hidden md:min-h-screen">
+        <div class="flex-1 bg-gray-100 p-4 md:p-8 w-full max-w-full overflow-x-hidden md:min-h-screen pb-24 md:pb-8">
             
             <!-- ADMIN: VERIFIKASI VOUCER -->
             <div id="tab-admin-verifikasi" class="hidden-tab bg-white p-6 rounded-lg shadow border-t-4 border-green-700">
@@ -115,31 +118,10 @@
             <!-- ADMIN: MARKETING -->
             <div id="tab-admin-marketing" class="hidden-tab">
                 <div class="mb-4">
-                    <button id="btn-toggle-marketing" onclick="toggleFormMarketing()" class="bg-green-700 text-white px-5 py-2.5 rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center gap-2">
+                    <button onclick="openModalMarketing()" class="bg-green-700 text-white px-5 py-2.5 rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                         Buat Akun Marketing Baru
                     </button>
-                </div>
-
-                <div id="form-marketing-container" class="bg-white p-6 rounded-lg shadow mb-6 hidden border-t-4 border-green-700">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Buat Akun Marketing</h2>
-                    <form onsubmit="createMarketingAccount(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                            <input type="text" id="new-mkt-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                            <input type="text" id="new-mkt-username" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <input type="text" id="new-mkt-password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        </div>
-                        <div class="md:col-span-3 mt-2">
-                            <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 font-semibold transition shadow-sm">Simpan Akun</button>
-                        </div>
-                    </form>
                 </div>
 
                 <div class="bg-white p-6 rounded-lg shadow overflow-x-auto border-t-4 border-green-700">
@@ -161,33 +143,10 @@
             <!-- DATA PENJUALAN (ADMIN & USER) -->
             <div id="tab-data-penjualan" class="hidden-tab">
                 <div class="mb-4 hidden" id="btn-toggle-penjualan-container">
-                    <button id="btn-toggle-penjualan" onclick="toggleFormPenjualan()" class="bg-green-700 text-white px-5 py-2.5 rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center gap-2">
+                    <button onclick="openModalPenjualan()" class="bg-green-700 text-white px-5 py-2.5 rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         Tambah Penjualan Baru
                     </button>
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow mb-6 hidden border-t-4 border-green-700" id="form-tambah-penjualan">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Input Data Penjualan Baru</h2>
-                    <form onsubmit="submitPenjualan(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="penj-pembeli" placeholder="Nama Pembeli" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        <input type="text" id="penj-nohp" placeholder="No. HP" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        <input type="text" id="penj-alamat" placeholder="Alamat Lengkap" required class="px-3 py-2 border border-gray-300 rounded-lg md:col-span-2 focus:border-green-600 focus:outline-none">
-                        <input type="text" id="penj-kategori" placeholder="Kategori (Opsional)" class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        <select id="penj-produk" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none bg-white">
-                            <option value="">-- Pilih Produk --</option>
-                            <option value="Laptop">Laptop</option>
-                            <option value="Komputer">Komputer</option>
-                            <option value="Printer">Printer</option>
-                            <option value="Komputer Printer">Komputer Printer</option>
-                        </select>
-                        <input type="text" id="penj-voucer" placeholder="Kode Voucer Klaim (Opsional)" class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        <input type="number" id="penj-harga" placeholder="Harga Final (Rp)" required class="px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        
-                        <div class="md:col-span-2 flex justify-end mt-2">
-                            <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 font-semibold transition shadow-sm">Simpan Penjualan</button>
-                        </div>
-                    </form>
                 </div>
 
                 <div class="bg-white p-6 rounded-lg shadow overflow-x-auto border-t-4 border-green-700">
@@ -250,29 +209,15 @@
 
             <!-- USER: BUAT VOUCER -->
             <div id="tab-user-buatvoucer" class="hidden-tab">
-                <div class="bg-white p-6 rounded-lg shadow mb-6 border-t-4 border-green-700">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800">Buat Voucer Baru</h2>
-                    <form onsubmit="generateVoucher(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pelanggan</label>
-                            <input type="text" id="v-pelanggan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">No WA</label>
-                            <input type="text" id="v-nowa" placeholder="Contoh: 08123456789" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Desa / Kelurahan</label>
-                            <input type="text" id="v-desa" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kecamatan</label>
-                            <input type="text" id="v-kecamatan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-600 focus:outline-none">
-                        </div>
-                        <div class="md:col-span-2 mt-2">
-                            <button type="submit" class="bg-green-700 text-white px-6 py-2.5 rounded-lg hover:bg-green-800 font-semibold transition shadow-md w-full md:w-auto">Buat & Simpan Voucer</button>
-                        </div>
-                    </form>
+                <div class="bg-white p-6 rounded-lg shadow mb-6 border-t-4 border-green-700 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Generator Voucer</h2>
+                        <p class="text-sm text-gray-500">Klik tombol berikut untuk membuat dan mencetak voucer diskon baru.</p>
+                    </div>
+                    <button onclick="openModalVoucer()" class="w-full md:w-auto bg-green-700 text-white px-6 py-2.5 rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Buat Voucer Baru
+                    </button>
                 </div>
 
                 <!-- Tampilan Voucer Baru (UKURAN RAMPING - max-w-sm, Teks Toko Besar, Rata Tengah, Merah Emas) -->
@@ -366,6 +311,128 @@
         </div>
     </div>
 
+    <!-- MODAL BUAT AKUN MARKETING (GAYA LOGIN) -->
+    <div id="modal-tambah-marketing" class="fixed inset-0 bg-gray-800 z-50 hidden flex items-center justify-center p-4">
+        <div class="max-w-sm w-full bg-white rounded-xl shadow-2xl p-8 border-t-4 border-green-700 relative">
+            <button onclick="closeModalMarketing()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Buat Akun Marketing</h2>
+                <p class="text-gray-500 mt-2 text-sm">Tambahkan akses untuk entitas baru</p>
+            </div>
+            <form id="form-tambah-marketing" onsubmit="createMarketingAccount(event)">
+                <div class="px-2">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap</label>
+                        <input type="text" id="new-mkt-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                        <input type="text" id="new-mkt-username" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                    </div>
+                    <div class="mb-8">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <input type="text" id="new-mkt-password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                    </div>
+                    <button type="submit" class="w-full bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-green-800 transition shadow-md">
+                        Simpan Akun
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH PENJUALAN (GAYA LOGIN) -->
+    <div id="modal-tambah-penjualan" class="fixed inset-0 bg-gray-800 z-50 hidden flex items-center justify-center p-4">
+        <div class="max-w-lg w-full bg-white rounded-xl shadow-2xl p-8 border-t-4 border-green-700 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModalPenjualan()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Input Data Penjualan Baru</h2>
+                <p class="text-gray-500 mt-2 text-sm">Lengkapi detail transaksi pelanggan</p>
+            </div>
+            <form id="form-tambah-penjualan" onsubmit="submitPenjualan(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 px-2">
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Nama Pembeli</label>
+                    <input type="text" id="penj-pembeli" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">No. HP</label>
+                    <input type="text" id="penj-nohp" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="md:col-span-2 mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Alamat Lengkap</label>
+                    <input type="text" id="penj-alamat" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Kategori (Opsional)</label>
+                    <input type="text" id="penj-kategori" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Produk</label>
+                    <select id="penj-produk" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 bg-white">
+                        <option value="">-- Pilih Produk --</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Komputer">Komputer</option>
+                        <option value="Printer">Printer</option>
+                        <option value="Komputer Printer">Komputer Printer</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Voucer Klaim</label>
+                    <input type="text" id="penj-voucer" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-8">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Harga Final (Rp)</label>
+                    <input type="number" id="penj-harga" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="w-full bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-green-800 transition shadow-md">
+                        Simpan Penjualan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL BUAT VOUCER (GAYA LOGIN) -->
+    <div id="modal-buat-voucer" class="fixed inset-0 bg-gray-800 z-50 hidden flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-white rounded-xl shadow-2xl p-8 border-t-4 border-green-700 relative">
+            <button onclick="closeModalVoucer()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Buat Voucer Baru</h2>
+                <p class="text-gray-500 mt-2 text-sm">Instansiasi data pelanggan untuk diskon</p>
+            </div>
+            <form id="form-buat-voucer" onsubmit="generateVoucher(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 px-2">
+                <div class="mb-2 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Nama Pelanggan</label>
+                    <input type="text" id="v-pelanggan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-2 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">No WA</label>
+                    <input type="text" id="v-nowa" placeholder="Contoh: 08123456789" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Desa / Kelurahan</label>
+                    <input type="text" id="v-desa" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-8">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Kecamatan</label>
+                    <input type="text" id="v-kecamatan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="w-full bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-green-800 transition shadow-md">
+                        Buat & Simpan Voucer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL EDIT MARKETING -->
     <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex justify-center items-center p-4">
         <div class="bg-white p-6 rounded-lg shadow-2xl w-full max-w-md border-t-4 border-green-700">
@@ -412,36 +479,6 @@
         function showLoading() { document.getElementById('loading').classList.remove('hidden'); }
         function hideLoading() { document.getElementById('loading').classList.add('hidden'); }
         
-        function toggleSidebar(e) {
-            if (e) e.stopPropagation();
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar.classList.contains('hidden')) {
-                sidebar.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('hidden');
-            }
-        }
-
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar && window.innerWidth < 768) {
-                sidebar.classList.add('hidden');
-            }
-        }
-
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const hamburgerBtn = document.getElementById('hamburger-btn');
-            
-            if (window.innerWidth < 768) {
-                if (sidebar && !sidebar.classList.contains('hidden')) {
-                    if (!sidebar.contains(event.target) && !hamburgerBtn.contains(event.target)) {
-                        closeSidebar();
-                    }
-                }
-            }
-        });
-
         // Helper untuk memformat tanggal ISO (yyyy-MM-dd) menjadi format Indonesia (dd Bulan yyyy)
         function formatDateToIndonesian(dateStr) {
             if (!dateStr) return "";
@@ -470,6 +507,31 @@
                 res.push(clean.substring(i, i + 4));
             }
             return res.join('-');
+        }
+
+        // Fungsi pemicu buka dan tutup Pop-up Modals
+        function openModalMarketing() {
+            document.getElementById('modal-tambah-marketing').classList.remove('hidden');
+        }
+        function closeModalMarketing() {
+            document.getElementById('modal-tambah-marketing').classList.add('hidden');
+            document.getElementById('form-tambah-marketing').reset();
+        }
+
+        function openModalPenjualan() {
+            document.getElementById('modal-tambah-penjualan').classList.remove('hidden');
+        }
+        function closeModalPenjualan() {
+            document.getElementById('modal-tambah-penjualan').classList.add('hidden');
+            document.getElementById('form-tambah-penjualan').reset();
+        }
+
+        function openModalVoucer() {
+            document.getElementById('modal-buat-voucer').classList.remove('hidden');
+        }
+        function closeModalVoucer() {
+            document.getElementById('modal-buat-voucer').classList.add('hidden');
+            document.getElementById('form-buat-voucer').reset();
         }
 
         // Fungsi pembentuk kode voucer acak
@@ -577,6 +639,8 @@
 
         function logout() {
             sessionStorage.removeItem('authUser');
+            sessionStorage.removeItem('currentTab');
+            sessionStorage.removeItem('lastVoucher');
             currentUser = null;
             document.getElementById('app-layout').classList.add('hidden');
             document.getElementById('login-page').classList.remove('hidden');
@@ -592,6 +656,7 @@
             document.getElementById('user-info-display').textContent = `${currentUser.name} (${currentUser.role})`;
             
             buildMenu();
+            restoreVoucherPreview();
             
             // Set initial settings state in Admin Panel
             if (currentUser.role === 'Admin') {
@@ -600,52 +665,100 @@
             }
         }
 
+        function restoreVoucherPreview() {
+            const saved = sessionStorage.getItem('lastVoucher');
+            if (saved) {
+                activeVoucherData = JSON.parse(saved);
+                document.getElementById('disp-v-pelanggan').textContent = activeVoucherData.pelanggan;
+                document.getElementById('disp-v-nowa').textContent = formatWAForDisplay(activeVoucherData.nowa);
+                document.getElementById('disp-v-alamat').textContent = `${activeVoucherData.desa}, Kec. ${activeVoucherData.kecamatan}`;
+                document.getElementById('disp-v-kode').textContent = activeVoucherData.kode;
+                document.getElementById('disp-v-tanggal').textContent = activeVoucherData.tanggal;
+                document.getElementById('new-voucher-display').classList.remove('hidden');
+            }
+        }
+
         function buildMenu() {
             const menuContainer = document.getElementById('sidebar-menu');
+            const mobileNavContainer = document.getElementById('mobile-bottom-nav');
             menuContainer.innerHTML = ''; 
+            if(mobileNavContainer) mobileNavContainer.innerHTML = '';
 
             const menus = [];
             if (currentUser.role === 'Admin') {
-                menus.push({ id: 'admin-verifikasi', label: 'Verifikasi Voucer', icon: 'M5 13l4 4L19 7' });
                 menus.push({ id: 'admin-marketing', label: 'Marketing', icon: 'M12 4v16m8-8H4' });
+                menus.push({ id: 'admin-verifikasi', label: 'Verifikasi Voucer', icon: 'M5 13l4 4L19 7' });
                 menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' });
                 menus.push({ id: 'admin-pengaturan', label: 'Pengaturan Akun', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' });
                 
                 document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
-                document.getElementById('form-tambah-penjualan').classList.add('hidden');
             } else {
-                menus.push({ id: 'user-buatvoucer', label: 'Buat Voucer', icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6' });
                 menus.push({ id: 'user-daftarvoucer', label: 'Daftar Voucer', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' });
+                menus.push({ id: 'user-buatvoucer', label: 'Buat Voucer', icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6' });
                 
                 if (appSettings.aksesPenjualanUser === 'true') {
                     menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z' });
                     document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
-                    document.getElementById('form-tambah-penjualan').classList.add('hidden');
                 } else {
                     document.getElementById('btn-toggle-penjualan-container').classList.add('hidden');
-                    document.getElementById('form-tambah-penjualan').classList.add('hidden');
                 }
             }
 
+            let tabToOpen = `tab-${menus[0].id}`;
+            const savedTab = sessionStorage.getItem('currentTab');
+            if (savedTab && menus.some(m => `tab-${m.id}` === savedTab)) {
+                tabToOpen = savedTab;
+            }
+            const activeIndex = menus.findIndex(m => `tab-${m.id}` === tabToOpen);
+
             menus.forEach((m, idx) => {
+                const isActive = (idx === activeIndex);
+                
+                // Desktop Button
                 const btn = document.createElement('a');
                 btn.href = "#";
-                btn.className = `flex items-center p-3 rounded-lg hover:bg-green-800 transition ${idx===0 ? 'bg-green-800' : ''}`;
+                btn.className = `flex items-center p-3 rounded-lg transition ${isActive ? 'bg-green-800' : 'hover:bg-green-800'}`;
                 btn.innerHTML = `<svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${m.icon}"></path></svg> ${m.label}`;
-                btn.onclick = (e) => {
+                
+                // Mobile Button
+                const mobBtn = document.createElement('a');
+                mobBtn.href = "#";
+                mobBtn.className = `flex flex-col items-center justify-center w-full py-2 min-w-[64px] transition ${isActive ? 'text-yellow-400' : 'text-gray-300'}`;
+                mobBtn.innerHTML = `
+                    <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${m.icon}"></path></svg>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-center truncate px-1" style="max-width: 80px;">${m.label.split(' ')[0]}</span>
+                `;
+
+                const handleClick = (e) => {
                     e.preventDefault();
+                    
                     Array.from(menuContainer.children).forEach(c => c.classList.remove('bg-green-800'));
+                    if(mobileNavContainer) {
+                        Array.from(mobileNavContainer.children).forEach(c => {
+                            c.classList.remove('text-yellow-400');
+                            c.classList.add('text-gray-300');
+                        });
+                    }
+                    
                     btn.classList.add('bg-green-800');
+                    mobBtn.classList.remove('text-gray-300');
+                    mobBtn.classList.add('text-yellow-400');
+                    
                     switchTab(`tab-${m.id}`);
-                    closeSidebar(); 
                 };
+
+                btn.onclick = handleClick;
+                mobBtn.onclick = handleClick;
+
                 menuContainer.appendChild(btn);
+                if(mobileNavContainer) mobileNavContainer.appendChild(mobBtn);
             });
 
-            switchTab(`tab-${menus[0].id}`);
+            switchTab(tabToOpen);
         }
 
         function switchTab(tabId) {
+            sessionStorage.setItem('currentTab', tabId);
             const tabs = document.querySelectorAll('.hidden-tab');
             tabs.forEach(t => {
                 t.style.display = 'none';
@@ -722,7 +835,7 @@
             if (res.status === 'success') {
                 showToast("Akun Marketing Berhasil Dibuat");
                 e.target.reset();
-                toggleFormMarketing(); 
+                closeModalMarketing(); 
                 loadMarketing(); 
             } else {
                 showToast(res.message, true);
@@ -859,8 +972,10 @@
                     
                     // Save state for share/download
                     activeVoucherData = { kode, pelanggan: pel, nowa, desa, kecamatan, tanggal: formattedDate };
+                    sessionStorage.setItem('lastVoucher', JSON.stringify(activeVoucherData));
                     
                     e.target.reset();
+                    closeModalVoucer();
                 } else {
                     showToast("Gagal menyimpan voucer", true);
                 }
@@ -918,7 +1033,7 @@
             if (res.status === 'success') {
                 showToast("Data Penjualan Berhasil Disimpan");
                 e.target.reset();
-                toggleFormPenjualan(); 
+                closeModalPenjualan(); 
                 loadPenjualan(); 
             } else {
                 showToast("Gagal menyimpan data", true);
