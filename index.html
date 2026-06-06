@@ -2294,13 +2294,12 @@
                 receiptText += wrappedKategori + "\n";
             }
             
-            // Tulisan catatan dipindah tepat setelah spesifikasi unit, BIASA (bukan bold)
+            // Jarak kosong untuk cetakan bluetooth
+            receiptText += "\n";
             if (catatan) {
                 let wrappedCatatan = wrapText("Catatan: " + catatan, 48);
                 receiptText += wrappedCatatan + "\n";
             }
-            // Jarak kosong di bawah catatan untuk cetakan bluetooth
-            receiptText += "\n";
             
             // TOTAL HARGA & Nominal Tebal
             let totalStr = "TOTAL HARGA";
@@ -2323,7 +2322,7 @@
             receiptText += "\x1b\x61\x01"; // Rata Tengah untuk Footer
             receiptText += "TERIMA KASIH\n";
             receiptText += "ATAS KUNJUNGAN DAN KEPERCAYAAN ANDA\n\n";
-            receiptText += "MOHON CEK DAN TELITI PEMBELIAN ANDA TERLEBIH DAHULU\n";
+            receiptText += "SILAHKAN CEK DAN TELITI BARANG PEMBELIAN ANDA\n";
             receiptText += "KARENA BARANG YANG SUDAH ANDA BELI\n";
             receiptText += "TIDAK DAPAT DIKEMBALIKAN LAGI\n";
             receiptText += "DENGAN ALASAN APAPUN\n";
