@@ -2269,6 +2269,7 @@
             // Sangat Tinggi & Sangat Lebar Ganda tebal optimal (Double height + Double width)
             receiptText += "\x1b\x21\x30\x1b\x45\x01" + "TURJA COMPUTER" + "\n"; 
             receiptText += "\x1b\x21\x00\x1b\x45\x00"; // Normal size & bold off
+            receiptText += "\n";
             receiptText += "Kewangu'an Pakisputih Kedungwuni Pekalongan\n";
             receiptText += "WA 0856 4260 0190 & REK BCA 2500879516\n\n"; // Ditambahkan satu baris kosong
             receiptText += "================================================\n"; 
@@ -2312,16 +2313,16 @@
             // Garansi rata kiri & Redaksi baru
             receiptText += "\x1b\x61\x00"; // Rata Kiri
             receiptText += "GARANSI TIDAK BERLAKU APABILA:\n";
-            receiptText += "* Kesalahan pemakaian\n";
-            receiptText += "* Nota ini hilang atau segel produk rusak\n";
-            receiptText += "* Terbentur atau tertindih atau kena air\n";
-            receiptText += "* Casing retak atau layar bergaris\n";
+            receiptText += "- Kesalahan pemakaian\n";
+            receiptText += "- Nota ini hilang atau segel produk rusak\n";
+            receiptText += "- Terbentur atau tertindih atau terkena air\n";
+            receiptText += "- Casing retak atau layar bergaris\n";
             receiptText += "------------------------------------------------\n";
             
             receiptText += "\x1b\x61\x01"; // Rata Tengah untuk Footer
-            receiptText += "Terima Kasih\n";
-            receiptText += "Atas Kunjungan & Kepercayaan Anda\n\n";
-            receiptText += "MOHON CEK DAN LIT BANG PEMBELIAN ANDA\n";
+            receiptText += "TERIMA KASIH\n";
+            receiptText += "ATAS KUNJUNGAN DAN KEPERCAYAAN ANDA\n\n";
+            receiptText += "MOHON CEK DAN TELITI PEMBELIAN ANDA TERLEBIH DAHULU\n";
             receiptText += "KARENA BARANG YANG SUDAH ANDA BELI\n";
             receiptText += "TIDAK DAPAT DIKEMBALIKAN LAGI\n";
             receiptText += "DENGAN ALASAN APAPUN\n";
