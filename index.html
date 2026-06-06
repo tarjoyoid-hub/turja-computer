@@ -176,7 +176,7 @@
                 </div>
             </div>
 
-            <!-- ADMIN: DAFTAR VOUCER GLOBAL (Ditambahkan tombol Buat Voucer) -->
+            <!-- ADMIN: DAFTAR VOUCER GLOBAL -->
             <div id="tab-admin-daftarvoucer" class="hidden-tab bg-white p-6 rounded-lg shadow overflow-x-auto border-t-4 border-green-700">
                 <div class="flex justify-between items-center mb-4">
                     <div>
@@ -210,7 +210,7 @@
             <!-- ADMIN: VERIFIKASI VOUCER -->
             <div id="tab-admin-verifikasi" class="hidden-tab">
                 <div class="max-w-md mx-auto mt-1 md:mt-2">
-                    <!-- Form Input Verifikasi (Akan disembunyikan saat hasil pratinjau muncul) -->
+                    <!-- Form Input Verifikasi -->
                     <div id="verify-form-container" class="bg-white p-8 rounded-xl shadow-md border-t-4 border-green-700 text-center">
                         <h2 class="text-2xl font-bold mb-1 text-gray-800">Verifikasi Voucer</h2>
                         <p class="text-sm text-gray-500 mb-6">Masukkan Kode Voucer dan Silahkan Klik Tombol Verifikasi</p>
@@ -242,7 +242,7 @@
                         <thead>
                             <tr class="bg-green-50 border-b border-green-200">
                                 <th class="p-2 text-green-900 font-semibold">No</th>
-                                <th class="p-2 text-center text-green-900 font-semibold w-28">Cetak</th>
+                                <th class="p-2 text-center text-green-900 font-semibold">Cetak</th>
                                 <th class="p-2 text-green-900 font-semibold">Pembeli</th>
                                 <th class="p-2 text-green-900 font-semibold">Alamat</th>
                                 <th class="p-2 text-green-900 font-semibold">No. WhatsApp</th>
@@ -308,14 +308,12 @@
                             Ubah Data Admin
                         </button>
                     </form>
-                    <!-- REPOSISI: Tombol Buat Akun dipindah ke bawah form Ubah Data Admin, teks diubah, warna hijau -->
                     <button onclick="openModalMarketing()" class="mt-4 bg-green-700 text-white w-full h-[38px] rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center justify-center gap-1.5 text-xs">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                         Buat Akun Marketing
                     </button>
                 </div>
 
-                <!-- Akses Menu User -->
                 <div class="max-w-md">
                     <h3 class="text-base font-semibold mb-3 text-gray-800">Akses Menu User</h3>
                     <form>
@@ -524,6 +522,42 @@
         </div>
     </div>
 
+    <!-- MODAL BUAT VOUCER (PERBAIKAN ID MODAL UTAMA) -->
+    <div id="modal-buat-voucer" class="fixed inset-0 bg-gray-800 bg-opacity-90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-white rounded-xl shadow-2xl p-8 border-t-4 border-green-700 relative">
+            <button onclick="closeModalVoucer()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Buat Voucer Baru</h2>
+                <p class="text-gray-500 mt-2 text-sm">Input Data Calon Pelanggan Untuk Membuat Kartu Voucer</p>
+            </div>
+            <form id="form-buat-voucer" onsubmit="generateVoucher(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 px-2">
+                <div class="mb-2 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Nama Pelanggan</label>
+                    <input type="text" id="v-pelanggan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-2 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">No WhatsApp</label>
+                    <input type="text" id="v-nowa" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Desa</label>
+                    <input type="text" id="v-desa" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="mb-8">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Kecamatan</label>
+                    <input type="text" id="v-kecamatan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="w-full bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-green-800 transition shadow-md">
+                        Buat Voucer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL EDIT MARKETING -->
     <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex justify-center items-center p-4">
         <div class="bg-white p-6 rounded-lg shadow-2xl w-full max-w-md border-t-4 border-green-700">
@@ -585,36 +619,49 @@
 
     <!-- MODAL PRINTER BLUETOOTH CONNECTION & PRINT CONFIRMATION -->
     <div id="modal-print-confirm" class="fixed inset-0 bg-gray-800 bg-opacity-90 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
-        <div class="max-w-sm w-full bg-white rounded-xl shadow-2xl p-6 border-t-4 border-green-700">
-            <h3 class="text-lg font-bold text-gray-800 mb-2 text-center">Cetak Struk Transaksi</h3>
-            <p class="text-sm text-gray-500 mb-6 text-center">Silakan hubungkan perangkat Anda ke printer kasir termal.</p>
-            
-            <!-- Panel Monitor Konektivitas Printer Bluetooth -->
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 text-xs text-gray-600 space-y-2">
-                <div class="flex justify-between items-center">
-                    <span>Status Printer:</span>
-                    <span id="printer-status-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800">TIDAK TERHUBUNG</span>
+        <div class="max-w-3xl w-full bg-white rounded-xl shadow-2xl p-6 border-t-4 border-green-700 flex flex-col md:flex-row gap-6 max-h-[90vh] overflow-y-auto">
+            <!-- Sisi Kiri: Realistis Struk Live Preview -->
+            <div class="flex-1 flex flex-col items-center border-b md:border-b-0 md:border-r border-gray-200 pb-4 md:pb-0 md:pr-6">
+                <h4 class="text-xs font-bold text-gray-600 mb-3 uppercase tracking-widest">Pratinjau Desain Struk</h4>
+                <div class="w-full max-w-[290px] bg-stone-200 p-3 rounded-lg shadow-inner overflow-hidden border border-stone-300">
+                    <div id="receipt-live-preview" class="bg-white shadow-md border-b-8 border-dashed border-stone-400 rounded-t-sm overflow-hidden" style="max-width: 74mm; margin: 0 auto;"></div>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span>Nama Printer:</span>
-                    <span id="printer-name-label" class="font-mono text-gray-800 font-semibold">Belum Disandingkan</span>
-                </div>
-                <!-- Tombol Hubungkan Khusus untuk Pairing/Mendeteksi Ulang -->
-                <button id="btn-pair-printer" onclick="pairBluetoothPrinter()" class="w-full mt-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1.5 rounded transition text-center flex items-center justify-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                    Sandingkan Printer Kasir
-                </button>
             </div>
-
-            <!-- Opsi Tombol Cetak, PDF, dan Batal -->
-            <div class="flex flex-col gap-2">
-                <button id="btn-execute-print" onclick="handlePrintYes('print')" class="px-3 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition text-xs font-bold flex items-center justify-center gap-1.5 w-full">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    Cetak Struk
-                </button>
-                <button onclick="handlePrintNo()" class="px-3 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition text-xs font-bold w-full">
-                    Tutup / Batal
-                </button>
+            <!-- Sisi Kanan: Panel Kontrol Konektivitas & Aksi -->
+            <div class="flex-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Cetak Struk Transaksi</h3>
+                    <p class="text-xs text-gray-500 mb-6 leading-relaxed">Pratinjau di sebelah kiri menunjukkan visualisasi cetak tebal di kertas kasir termal. Hubungkan Bluetooth printer atau klik "Simpan PDF".</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 text-xs text-gray-600 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span>Status Printer:</span>
+                            <span id="printer-status-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800">TIDAK TERHUBUNG</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Nama Printer:</span>
+                            <span id="printer-name-label" class="font-mono text-gray-800 font-semibold">Belum Disandingkan</span>
+                        </div>
+                        <button id="btn-pair-printer" onclick="pairBluetoothPrinter()" class="w-full mt-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1.5 rounded transition text-center flex items-center justify-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                            Sandingkan Printer Kasir
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex gap-2">
+                        <button onclick="handlePrintYes('pdf')" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-xs font-bold flex items-center justify-center gap-1.5 flex-1" id="btn-save-pdf-manual">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Simpan PDF
+                        </button>
+                        <button id="btn-execute-print" onclick="handlePrintYes('print')" class="px-3 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition text-xs font-bold flex items-center justify-center gap-1.5 flex-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            Cetak Struk
+                        </button>
+                    </div>
+                    <button onclick="handlePrintNo()" class="px-3 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition text-xs font-bold w-full">
+                        Tutup / Batal
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1163,6 +1210,7 @@
                 menus.push({ id: 'admin-dashboard', label: 'Dasbor Admin', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' });
                 menus.push({ id: 'admin-daftarvoucer', label: 'Daftar Voucer', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' });
                 menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' });
+                // Ikon pengaturan Akun & Sistem diubah menjadi ikon slider kustom premium yang sangat menarik
                 menus.push({ id: 'admin-pengaturan', label: 'Pengaturan Akun', icon: 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4' });
                 document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
             } else {
@@ -1730,7 +1778,7 @@
                     tr.innerHTML = `
                         <td class="p-2">${no++}</td>
                         <td class="p-2 text-center">
-                            <button onclick="printReceiptDirect('${p['Waktu Input']}', '${p.Pembeli}', '${p.Alamat}', '${p['No HP']}', '${p.Produk}', '${p.Kategori}', '${p['Harga Final']}', '${statusVal}')" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 text-xs font-semibold shadow-sm flex items-center gap-1 transition mx-auto" title="Cetak Struk">
+                            <button onclick="printReceiptDirect('${p['Waktu Input']}', '${p.Pembeli}', '${p.Alamat}', '${p['No HP']}', '${p.Produk}', '${p.Kategori}', '${p['Harga Final']}', '${statusVal}')" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 text-xs font-semibold shadow-sm flex items-center gap-1 transition mx-auto inline-block" title="Cetak Struk">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                                 </svg>
@@ -1852,7 +1900,7 @@
             const statusBadge = document.getElementById('printer-status-badge');
             const nameLabel = document.getElementById('printer-name-label');
             if (!navigator.bluetooth || typeof navigator.bluetooth.requestDevice !== 'function') {
-                showToast("Bluetooth tidak didukung oleh browser ini atau dilarang oleh kebijakan sandbox iFrame. Silakan gunakan tombol 'Simpan PDF' di bawah untuk mencetak langsung lewat menu bawaan perangkat Anda.", true);
+                showToast("Fitur Bluetooth dilarang oleh Kebijakan Keamanan Sandbox Browser Anda. Silakan klik tombol 'Simpan PDF' untuk mencetak struk secara aman.", true);
                 return;
             }
             try {
