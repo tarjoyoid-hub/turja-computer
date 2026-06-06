@@ -30,7 +30,7 @@
          GANTI URL DI BAWAH INI DENGAN URL WEB APP GAS ANDA
          ========================================== -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxiGZZZDcp89d7LRr5I6vUxHd7N--1539x5dQd_3xjU8LflC2wxX4KRqtOYoQal5OQu/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxVRttVODZ3HxfgK99UnHjLhvWI4yXKw8-S7E4t5tx_VSnLEMeKw5qZTNrX5bPuDKCGnw/exec"; 
     </script>
 
     <!-- LOADING OVERLAY -->
@@ -242,7 +242,7 @@
                         <thead>
                             <tr class="bg-green-50 border-b border-green-200">
                                 <th class="p-2 text-green-900 font-semibold">No</th>
-                                <th class="p-2 text-center text-green-900 font-semibold">Cetak</th>
+                                <th class="p-2 text-center text-green-900 font-semibold w-28">Cetak</th>
                                 <th class="p-2 text-green-900 font-semibold">Pembeli</th>
                                 <th class="p-2 text-green-900 font-semibold">Alamat</th>
                                 <th class="p-2 text-green-900 font-semibold">No. WhatsApp</th>
@@ -308,6 +308,7 @@
                             Ubah Data Admin
                         </button>
                     </form>
+                    <!-- REPOSISI: Tombol Buat Akun dipindah ke bawah form Ubah Data Admin, teks diubah, warna hijau -->
                     <button onclick="openModalMarketing()" class="mt-4 bg-green-700 text-white w-full h-[38px] rounded-lg hover:bg-green-800 font-semibold shadow transition flex items-center justify-center gap-1.5 text-xs">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                         Buat Akun Marketing
@@ -559,7 +560,7 @@
     </div>
 
     <!-- MODAL EDIT MARKETING -->
-    <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex justify-center items-center p-4">
+    <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white p-6 rounded-lg shadow-2xl w-full max-w-md border-t-4 border-green-700">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Edit Akun Marketing</h2>
             <form id="form-edit-marketing" onsubmit="submitEditMarketing(event)">
@@ -1795,7 +1796,7 @@
                         <td class="p-2 text-right font-semibold">Rp ${parseInt(p['Harga Final']).toLocaleString('id-ID')}</td>
                         <td class="p-2 font-mono text-green-700 font-bold">${p['Voucer Klaim']}</td>
                         <td class="p-2">${p.Marketing}</td>
-                        <td class="p-2 text-xs text-gray-500">${p['Waktu Input']}</td>
+                        <td class="p-2 text-xs text-gray-500">\${p['Waktu Input'] || ''}</td>
                         <td class="p-2 text-center flex gap-1 justify-center items-center">
                             <button onclick="openEditPenjualan('${p['Waktu Input']}', '${p.Pembeli}', '${p['No HP']}', '${p.Alamat}', '${p.Kategori}', '${p.Produk}', '${p['Voucer Klaim']}', '${p['Harga Final']}', '${statusVal}')" class="bg-yellow-500 hover:bg-yellow-600 text-white p-1 rounded transition shadow-sm" title="Edit">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1900,7 +1901,7 @@
             const statusBadge = document.getElementById('printer-status-badge');
             const nameLabel = document.getElementById('printer-name-label');
             if (!navigator.bluetooth || typeof navigator.bluetooth.requestDevice !== 'function') {
-                showToast("Fitur Bluetooth dilarang oleh Kebijakan Keamanan Sandbox Browser Anda. Silakan klik tombol 'Simpan PDF' untuk mencetak struk secara aman.", true);
+                showToast("Bluetooth tidak didukung oleh browser ini atau dilarang oleh kebijakan sandbox iFrame. Silakan gunakan tombol 'Simpan PDF' di bawah untuk mencetak langsung lewat menu bawaan perangkat Anda.", true);
                 return;
             }
             try {
@@ -2227,6 +2228,17 @@
         function downloadVoucherImage() {
             if(!activeVoucherData) return;
             drawAndDownloadVoucher(activeVoucherData.kode, activeVoucherData.pelanggan, activeVoucherData.nowa, activeVoucherData.desa, activeVoucherData.kecamatan, activeVoucherData.tanggal);
+        }
+
+        // FUNGSI MEMBUAT KODE VOUCER ACAK (DIKEMBALIKAN KE TEMPAT SEMULA)
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                if (i === 4) result += '-';
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
         }
 
         function drawAndDownloadVoucher(kode, pelanggan, nowa, desa, kecamatan, tanggal) {
