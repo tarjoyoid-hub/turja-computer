@@ -2292,23 +2292,24 @@
             if (kategori) {
                 let wrappedKategori = wrapText(kategori, 48);
                 receiptText += wrappedKategori + "\n";
-            }
+            }           
             
             // Jarak kosong untuk cetakan bluetooth
             receiptText += "\n";
+            
             if (catatan) {
-                let wrappedCatatan = wrapText("Catatan: " + catatan, 48);
+                let wrappedCatatan = wrapText("Catatan : " + catatan, 48);
                 receiptText += wrappedCatatan + "\n";
             }
             
+            receiptText += "================================================\n"; 
             // TOTAL HARGA & Nominal Tebal
             let totalStr = "TOTAL HARGA";
             let rightText = "Rp " + formattedHarga;
             let spaceTotal = 48 - totalStr.length - rightText.length;
             if(spaceTotal < 1) spaceTotal = 1;
             receiptText += totalStr + " ".repeat(spaceTotal) + "\x1b\x45\x01" + rightText + "\x1b\x45\x00\n";
-            
-            receiptText += "================================================\n"; 
+            receiptText += "------------------------------------------------\n";
             
             // Garansi rata kiri & Redaksi baru
             receiptText += "\x1b\x61\x00"; // Rata Kiri
