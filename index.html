@@ -30,7 +30,7 @@
          GANTI URL DI BAWAH INI DENGAN URL WEB APP GAS ANDA
          ========================================== -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxFFJ41BTLvneZ6L3QBsfYrCfW7NrgdSLjDbDi10TV1YZM79TKYP8iAXh3hfkOh92vzWA/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbw4brXbpWiibCAuQ-US-Tk3b3KQ6ni6yVOGi93dLE4n9bjX2HeLkEAED-0TNeax1ogU/exec"; 
     </script>
 
     <!-- LOADING OVERLAY -->
@@ -68,7 +68,7 @@
             
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-bold text-gray-800">Turja Computer</h1>
-                <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold mt-2 border border-green-300 shadow-sm">Aplikasi Sistem V.6</span>
+                <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold mt-2 border border-green-300 shadow-sm">Partnering for your success</span>
             </div>
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="px-2">
@@ -242,7 +242,7 @@
                         <thead>
                             <tr class="bg-green-50 border-b border-green-200">
                                 <th class="p-2 text-green-900 font-semibold">No</th>
-                                <th class="p-2 text-center text-green-900 font-semibold">Cetak</th>
+                                <th class="p-2 text-center text-green-900 font-semibold w-28">Cetak</th>
                                 <th class="p-2 text-green-900 font-semibold">Pembeli</th>
                                 <th class="p-2 text-green-900 font-semibold">Alamat</th>
                                 <th class="p-2 text-green-900 font-semibold">No. WhatsApp</th>
@@ -678,7 +678,7 @@
                     Batal
                 </button>
                 <button onclick="executeDeletePenj()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-xs font-bold p-1">
-                    Ya, Hapus
+                    Hapus
                 </button>
             </div>
         </div>
@@ -695,7 +695,7 @@
                     Batal
                 </button>
                 <button onclick="executeDeleteVoucher()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-semibold">
-                    Ya, Hapus
+                    Hapus
                 </button>
             </div>
         </div>
@@ -1211,7 +1211,6 @@
                 menus.push({ id: 'admin-dashboard', label: 'Dasbor Admin', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' });
                 menus.push({ id: 'admin-daftarvoucer', label: 'Daftar Voucer', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' });
                 menus.push({ id: 'data-penjualan', label: 'Data Penjualan', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' });
-                // Ikon pengaturan Akun & Sistem diubah menjadi ikon slider kustom premium yang sangat menarik
                 menus.push({ id: 'admin-pengaturan', label: 'Pengaturan Akun', icon: 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4' });
                 document.getElementById('btn-toggle-penjualan-container').classList.remove('hidden');
             } else {
@@ -1420,8 +1419,8 @@
                                     <div class="text-yellow-400 text-2xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] tracking-tight">100 Rb</div>
                                 </div>
                             </div>
-                            <div class="mt-3 pt-2 border-t border-green-800 border-opacity-40 text-center flex flex-col gap-1">
-                                <p class="text-[10px] text-green-200 italic leading-snug font-medium">Berlaku s/d: <span class="font-bold text-yellow-400 text-xs">${formatDateToIndonesian(v['Berlaku Sampai'])}</span></p>
+                            <div class="mt-3 pt-2 border-t border-green-800 border-opacity-40 text-center flex flex-col gap-1 font-medium">
+                                <p class="text-[10px] text-green-200 italic leading-snug">Berlaku s/d: <span class="font-bold text-yellow-400 text-xs">${formatDateToIndonesian(v['Berlaku Sampai'])}</span></p>
                                 <p class="text-[9px] text-green-300">Pembuat: ${v.Pembuat}</p>
                             </div>
                         </div>
@@ -1783,8 +1782,6 @@
                     const statusClass = statusVal === 'Belum Lunas' ? 'text-red-600 font-bold' : 'text-green-700 font-bold';
                     const tr = document.createElement('tr');
                     tr.className = "border-b hover:bg-green-50 transition whitespace-nowrap";
-                    
-                    // PERBAIKAN: Menghapus karakter backslash escape '\' agar data p['Waktu Input'] terbaca dan nampil dengan benar
                     tr.innerHTML = `
                         <td class="p-2">${no++}</td>
                         <td class="p-2 text-center">
@@ -1824,6 +1821,7 @@
             }
         }
 
+        // PERBAIKAN: Fungsi openEditPenjualan disinkronkan secara konsisten agar form terisi dengan benar saat tombol edit ditekan
         function openEditPenjualan(id, pembeli, nohp, alamat, kategori, produk, voucer, harga, catatan) {
             document.getElementById('penj-edit-id').value = id; 
             document.getElementById('modal-penjualan-title').textContent = "Edit Data Penjualan";
@@ -1835,8 +1833,11 @@
             document.getElementById('penj-kategori').value = kategori;
             document.getElementById('penj-produk').value = produk;
             document.getElementById('penj-voucer').value = voucer;
+            
+            // Format ulang harga dengan titik agar serasi dengan formatter input uang
             document.getElementById('penj-harga').value = parseInt(harga).toLocaleString('id-ID');
-            document.getElementById('penj-catatan').value = catatan === "Lunas" ? "" : catatan; 
+            document.getElementById('penj-catatan').value = catatan; 
+            
             document.getElementById('modal-tambah-penjualan').classList.remove('hidden');
         }
 
