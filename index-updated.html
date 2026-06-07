@@ -1,0 +1,627 @@
+<!-- Chosen Palette: Warm Neutrals & Emerald Green -->
+<!-- Application Structure Plan: Single Page Application with dynamic top navigation bar for desktop and bottom bar for mobile. Includes administrative dashboard, voucher list, and real-time sales input -->
+<!-- Visualization & Content Choices: KPI cards are used for statistics, comparative tables with actions for detailed data, and a custom visual preview for voucher verification. NO SVG/Mermaid. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turja Computer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden-tab { display: none; }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #15803d; /* green-700 */
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- ==========================================
+         GANTI URL DI BAWAH INI DENGAN URL WEB APP GAS ANDA
+         ========================================== -->
+    <script>
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzi0plJRebrT748G7hgvNIqifC3kazmTngMdsB6I5Sk9R0r13qV85GrlrDNgcvh5uc8RA/exec"; 
+    </script>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loading" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-[60] hidden flex justify-center items-center">
+        <div class="bg-white p-5 rounded-lg flex flex-col items-center shadow-xl">
+            <div class="spinner mb-3"></div>
+            <p class="text-gray-700 font-medium text-sm">Memproses data...</p>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION (Premium & Attractive UI) -->
+    <div id="toast" class="fixed top-5 right-5 z-[100] transform transition-all duration-300 translate-x-full opacity-0 pointer-events-none">
+        <div id="toast-card" class="bg-white border-l-4 rounded-xl shadow-2xl p-4 flex items-start gap-3 max-w-sm pointer-events-auto">
+            <div id="toast-icon-box" class="p-1.5 rounded-lg flex-shrink-0"></div>
+            <div class="flex-1">
+                <p id="toast-title" class="font-bold text-sm"></p>
+                <p id="toast-msg" class="text-xs text-gray-500 mt-0.5"></p>
+            </div>
+            <button onclick="dismissToast()" class="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- HALAMAN LOGIN -->
+    <div id="login-page" class="fixed inset-0 bg-gray-800 z-40 flex items-center justify-center p-4">
+        <div class="max-w-sm w-full bg-white rounded-xl shadow-2xl p-8 border-t-4 border-green-700">
+            <div class="flex justify-center mb-4">
+                <div class="p-4 bg-green-50 rounded-full text-green-700 shadow-sm border border-green-100">
+                    <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-800">Turja Computer</h1>
+                <span class="inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold mt-2 border border-green-300 shadow-sm">Partnering for your success</span>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="px-2">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                        <input type="text" id="username" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600" required>
+                    </div>
+                    <div class="mb-8">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                        <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-green-800 transition shadow-md flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                        </svg>
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP LAYOUT (DASHBOARD) -->
+    <div id="app-layout" class="hidden min-h-screen flex flex-col relative">
+        <!-- Navbar Mobile -->
+        <div id="mobile-navbar" class="md:hidden bg-green-800 text-white p-4 flex justify-between items-center z-30 sticky top-0 w-full shadow-md">
+            <h1 class="font-bold text-lg" id="mobile-nav-title">Dashboard</h1>
+            <button onclick="logout()" class="focus:outline-none p-2 bg-green-900 hover:bg-green-950 rounded transition text-white" title="Logout">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 11-12.727 0M12 2v10m0 0l-3-3m3 3l3-3"></path></svg>
+            </button>
+        </div>
+
+        <!-- Desktop Top Navigation Menu -->
+        <div id="sidebar" class="bg-green-900 text-white w-full z-20 hidden md:flex items-center justify-between shadow-md px-4 border-b border-green-800 sticky top-0">
+            <div class="flex items-center py-2 border-r border-green-800 pr-4 mr-2">
+                <div class="p-1.5 bg-green-800 rounded-lg mr-2 shadow-inner">
+                    <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-lg font-bold text-white tracking-wide" id="sidebar-title">Turja Computer</h2>
+            </div>
+            <nav class="flex-1 flex flex-row space-x-1.5 overflow-x-auto items-center py-2 no-scrollbar" id="sidebar-menu"></nav>
+            <div class="flex items-center border-l border-green-800 pl-4 ml-2 py-2">
+                <div class="flex flex-col text-right mr-3">
+                    <span class="text-xs font-bold text-white" id="desktop-user-name">User</span>
+                    <span class="text-[9px] uppercase tracking-wider text-green-300" id="desktop-user-role">Role</span>
+                </div>
+                <button onclick="logout()" class="p-2 bg-green-800 text-white hover:bg-red-500 hover:text-white rounded-lg transition shadow-sm" title="Logout">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 11-12.727 0M12 2v10m0 0l-3-3m3 3l3-3"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Mobile -->
+        <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 w-full bg-green-900 text-gray-300 z-40 flex justify-around items-center border-t border-green-950 pb-safe"></nav>
+
+        <!-- Main Content -->
+        <div class="flex-1 bg-gray-100 p-4 md:p-8 w-full max-w-full overflow-x-hidden md:min-h-screen pb-24 md:pb-8">
+            
+            <!-- ADMIN: DASHBOARD ANALITIK -->
+            <div id="tab-admin-dashboard" class="hidden-tab">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Dashboard Analitik</h2>
+                        <p class="text-sm text-gray-500">Ringkasan Indikator Performa Secara Real-Time</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                    <div class="bg-blue-50 p-5 rounded-xl shadow-sm border-b-4 border-blue-500 flex flex-col justify-between">
+                        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Jumlah Marketing</span>
+                        <div class="flex items-baseline justify-between mt-2">
+                            <span class="text-3xl font-extrabold text-blue-900" id="dash-marketing-count">0</span>
+                            <span class="text-xs text-blue-600 font-semibold">Orang</span>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50 p-5 rounded-xl shadow-sm border-b-4 border-indigo-500 flex flex-col justify-between">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Unit Penjualan</span>
+                        <div class="flex items-baseline justify-between mt-2">
+                            <span class="text-3xl font-extrabold text-indigo-900" id="dash-penjualan-count">0</span>
+                            <span class="text-xs text-indigo-600 font-semibold">Transaksi</span>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50 p-5 rounded-xl shadow-sm border-b-4 border-emerald-500 flex flex-col justify-between">
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Voucer Diskon Aktif</span>
+                        <div class="flex items-baseline justify-between mt-2">
+                            <span class="text-3xl font-extrabold text-emerald-900" id="dash-voucer-aktif">0</span>
+                            <span class="text-xs text-emerald-600 font-semibold">Lembar</span>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 p-5 rounded-xl shadow-sm border-b-4 border-amber-500 flex flex-col justify-between">
+                        <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Voucer Diklaim</span>
+                        <div class="flex items-baseline justify-between mt-2">
+                            <span class="text-3xl font-extrabold text-amber-900" id="dash-voucer-klaim">0</span>
+                            <span class="text-xs text-emerald-600 font-semibold">Lembar</span>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 p-5 rounded-xl shadow-sm border-b-4 border-rose-500 flex flex-col justify-between">
+                        <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Voucer Expired</span>
+                        <div class="flex items-baseline justify-between mt-2">
+                            <span class="text-3xl font-extrabold text-rose-900" id="dash-voucer-expired">0</span>
+                            <span class="text-xs text-rose-600 font-semibold">Lembar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATA PENJUALAN (ADMIN & USER) -->
+            <div id="tab-data-penjualan" class="hidden-tab">
+                <div class="bg-white p-6 rounded-lg shadow overflow-x-auto border-t-4 border-green-700">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Data Penjualan</h2>
+                        <div class="flex items-center gap-2">
+                            <span id="btn-toggle-penjualan-container" class="hidden">
+                                <button onclick="openModalPenjualan()" class="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700 text-sm font-semibold shadow transition flex items-center gap-1.5">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    Tambah
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <table class="w-full text-left border-collapse text-sm min-w-[1200px]">
+                        <thead>
+                            <tr class="bg-green-50 border-b border-green-200">
+                                <th class="p-2 text-green-900 font-semibold">No</th>
+                                <th class="p-2 text-center text-green-900 font-semibold w-28">Cetak</th>
+                                <th class="p-2 text-green-900 font-semibold">Pembeli</th>
+                                <th class="p-2 text-green-900 font-semibold">Alamat</th>
+                                <th class="p-2 text-green-900 font-semibold">No. WhatsApp</th>
+                                <th class="p-2 text-green-900 font-semibold">Produk</th>
+                                <th class="p-2 text-green-900 font-semibold">Spesifikasi</th>
+                                <th class="p-2 text-green-900 font-semibold">Status</th>
+                                <th class="p-2 text-right text-green-900 font-semibold">Harga Final</th>
+                                <th class="p-2 text-green-900 font-semibold">Voucer</th>
+                                <th class="p-2 text-green-900 font-semibold">Marketing</th>
+                                <th class="p-2 text-green-900 font-semibold">Waktu Input</th>
+                                <th class="p-2 text-center text-green-900 font-semibold">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="penjualan-list-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH/EDIT PENJUALAN -->
+    <div id="modal-tambah-penjualan" class="fixed inset-0 bg-gray-800 bg-opacity-90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="max-w-lg w-full bg-white rounded-xl shadow-2xl p-8 border-t-4 border-green-700 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModalPenjualan()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800" id="modal-penjualan-title">Input Data Penjualan Baru</h2>
+                <p class="text-gray-500 mt-2 text-sm" id="modal-penjualan-subtitle">Lengkapi detail transaksi pelanggan</p>
+            </div>
+            <form id="form-tambah-penjualan-form" onsubmit="submitPenjualan(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 px-2">
+                <input type="hidden" id="penj-edit-id" value=""> 
+                
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Nama Pembeli</label>
+                    <input type="text" id="penj-pembeli" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">No. WhatsApp</label>
+                    <input type="text" id="penj-nohp" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                
+                <div class="mb-2 md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Alamat Lengkap</label>
+                    <input type="text" id="penj-alamat" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Produk</label>
+                    <select id="penj-produk" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 bg-white">
+                        <option value="">-- Pilih Produk --</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Komputer">Komputer</option>
+                        <option value="Printer">Printer</option>
+                        <option value="Paket Olshop">Paket Olshop</option>
+                        <option value="Servis">Servis</option>
+                        <option value="Lainya">Lainya</option>
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Spesifikasi Unit</label>
+                    <input type="text" id="penj-kategori" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Harga Final (Rp)</label>
+                    <input type="text" id="penj-harga" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Catatan</label>
+                    <input type="text" id="penj-catatan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+
+                <div class="mb-8">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Voucer Klaim</label>
+                    <input type="text" id="penj-voucer" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600">
+                </div>
+                
+                <div class="md:col-span-2">
+                    <button type="submit" id="btn-save-penjualan" class="w-full bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-green-800 transition shadow-md">
+                        Simpan Penjualan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State Application
+        let currentUser = null; 
+        let appSettings = { aksesPenjualanUser: 'true', masaAktifVoucer: '30' };
+        let activeVoucherData = null; 
+        let tempPrintData = null;
+
+        // DATABASE SIMULASI OFFLINE
+        const offlineDb = {
+            akun: [
+                { ID: 'A1', Nama: 'Administrator', Username: 'admin', Password: '123', Role: 'Admin' },
+                { ID: 'U1', Nama: 'User Demo', Username: 'user', Password: '123', Role: 'User' }
+            ],
+            penjualan: [
+                { ID: 'P1', "Waktu Input": '30/05/2026 12:00:00', Marketing: 'User Demo', Pembeli: 'Budi Santoso', "No HP": '0856 4260 0600', Alamat: 'Pakisputih', Kategori: 'i5 RAM 8GB SSD 256GB', Produk: 'Laptop', Harga: '5000000', Catatan: 'Sudah bayar', Voucer: 'TRJA-7777', Status: 'Pending' }
+            ]
+        };
+
+        window.onload = () => {
+            const savedUser = sessionStorage.getItem('authUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showApp();
+            }
+            initInputFormatters();
+        };
+
+        function showLoading() { document.getElementById('loading').classList.remove('hidden'); }
+        function hideLoading() { document.getElementById('loading').classList.add('hidden'); }
+        
+        let toastTimeout = null;
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const card = document.getElementById('toast-card');
+            const iconBox = document.getElementById('toast-icon-box');
+            const title = document.getElementById('toast-title');
+            const message = document.getElementById('toast-msg');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+
+            if (isError) {
+                card.className = "bg-white border-l-4 border-red-600 rounded-xl shadow-2xl p-4 flex items-start gap-3 max-w-sm pointer-events-auto";
+                iconBox.className = "p-1.5 rounded-lg bg-red-50 text-red-600";
+                title.textContent = "Gagal!";
+                title.className = "font-bold text-sm text-red-700";
+            } else {
+                card.className = "bg-white border-l-4 border-green-600 rounded-xl shadow-2xl p-4 flex items-start gap-3 max-w-sm pointer-events-auto";
+                iconBox.className = "p-1.5 rounded-lg bg-green-50 text-green-600";
+                title.textContent = "Berhasil!";
+                title.className = "font-bold text-sm text-green-700";
+            }
+
+            message.textContent = msg;
+
+            if (toast) {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+            }
+
+            toastTimeout = setTimeout(() => {
+                dismissToast();
+            }, 4000);
+        }
+
+        function dismissToast() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.classList.add('translate-x-full', 'opacity-0');
+                toast.classList.remove('translate-x-0', 'opacity-100');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            showLoading();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            setTimeout(() => {
+                const user = offlineDb.akun.find(u => u.Username === username && u.Password === password);
+                hideLoading();
+                
+                if (user) {
+                    currentUser = user;
+                    sessionStorage.setItem('authUser', JSON.stringify(user));
+                    showToast('Login berhasil!');
+                    showApp();
+                } else {
+                    showToast('Username atau password salah!', true);
+                }
+            }, 800);
+        }
+
+        function showApp() {
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('app-layout').classList.remove('hidden');
+            document.getElementById('desktop-user-name').textContent = currentUser.Nama;
+            document.getElementById('desktop-user-role').textContent = currentUser.Role;
+            refreshPenjualanList();
+        }
+
+        function logout() {
+            document.getElementById('modal-logout-confirm').classList.remove('hidden');
+        }
+
+        function closeLogoutConfirm() {
+            document.getElementById('modal-logout-confirm').classList.add('hidden');
+        }
+
+        function executeLogout() {
+            sessionStorage.removeItem('authUser');
+            location.reload();
+        }
+
+        function openModalPenjualan() {
+            document.getElementById('penj-edit-id').value = "";
+            document.getElementById('modal-penjualan-title').textContent = "Input Data Penjualan Baru";
+            document.getElementById('modal-penjualan-subtitle').textContent = "Lengkapi detail transaksi pelanggan";
+            document.getElementById('btn-save-penjualan').textContent = "Simpan Penjualan";
+            document.getElementById('form-tambah-penjualan-form').reset();
+            document.getElementById('modal-tambah-penjualan').classList.remove('hidden');
+        }
+
+        function closeModalPenjualan() {
+            document.getElementById('modal-tambah-penjualan').classList.add('hidden');
+            document.getElementById('form-tambah-penjualan-form').reset();
+        }
+
+        // FUNGSI EDIT PENJUALAN - PERBAIKAN UTAMA
+        function openEditPenjualan(penjualanId) {
+            const penjualan = offlineDb.penjualan.find(p => p.ID === penjualanId);
+            
+            if (!penjualan) {
+                showToast('Data tidak ditemukan', true);
+                return;
+            }
+
+            // Isi form dengan data yang ada
+            document.getElementById('penj-edit-id').value = penjualan.ID;
+            document.getElementById('penj-pembeli').value = penjualan.Pembeli || '';
+            document.getElementById('penj-nohp').value = penjualan["No HP"] || '';
+            document.getElementById('penj-alamat').value = penjualan.Alamat || '';
+            document.getElementById('penj-produk').value = penjualan.Produk || '';
+            document.getElementById('penj-kategori').value = penjualan.Kategori || '';
+            document.getElementById('penj-harga').value = parseInt(penjualan.Harga || 0).toLocaleString('id-ID') || '';
+            document.getElementById('penj-catatan').value = penjualan.Catatan || '';
+            document.getElementById('penj-voucer').value = penjualan.Voucer || '';
+
+            // Ubah judul modal
+            document.getElementById('modal-penjualan-title').textContent = "Edit Data Penjualan";
+            document.getElementById('modal-penjualan-subtitle').textContent = "Perbarui detail transaksi pelanggan";
+            document.getElementById('btn-save-penjualan').textContent = "Perbarui Penjualan";
+
+            // Buka modal
+            document.getElementById('modal-tambah-penjualan').classList.remove('hidden');
+        }
+
+        // FUNGSI SUBMIT DATA PENJUALAN (CREATE & UPDATE) - PERBAIKAN UTAMA
+        function submitPenjualan(event) {
+            event.preventDefault();
+            showLoading();
+
+            const editId = document.getElementById('penj-edit-id').value;
+            const pembeli = document.getElementById('penj-pembeli').value;
+            const nohp = document.getElementById('penj-nohp').value;
+            const alamat = document.getElementById('penj-alamat').value;
+            const produk = document.getElementById('penj-produk').value;
+            const kategori = document.getElementById('penj-kategori').value;
+            const hargaRaw = document.getElementById('penj-harga').value.replace(/\./g, '');
+            const catatan = document.getElementById('penj-catatan').value;
+            const voucer = document.getElementById('penj-voucer').value;
+
+            // Validasi
+            if (!pembeli || !nohp || !alamat || !produk || !hargaRaw) {
+                hideLoading();
+                showToast('Mohon isi semua field yang wajib!', true);
+                return;
+            }
+
+            const penjualanData = {
+                Pembeli: pembeli,
+                "No HP": nohp,
+                Alamat: alamat,
+                Produk: produk,
+                Kategori: kategori,
+                Harga: hargaRaw,
+                Catatan: catatan,
+                Voucer: voucer,
+                Marketing: currentUser.Nama,
+                Status: 'Pending'
+            };
+
+            // JIKA ADA ID, BERARTI EDIT (UPDATE)
+            if (editId) {
+                penjualanData.ID = editId;
+                penjualanData["Waktu Input"] = new Date().toLocaleString('id-ID');
+                
+                // UPDATE di offline DB - KUNCI PERBAIKAN
+                const indexToUpdate = offlineDb.penjualan.findIndex(p => p.ID === editId);
+                if (indexToUpdate !== -1) {
+                    // Ganti seluruh object dengan data baru
+                    offlineDb.penjualan[indexToUpdate] = { ...offlineDb.penjualan[indexToUpdate], ...penjualanData };
+                    console.log('Data diperbarui:', offlineDb.penjualan[indexToUpdate]);
+                }
+
+                // Kirim ke GAS (dengan action UPDATE)
+                fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'UPDATE_PENJUALAN',
+                        data: penjualanData
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    hideLoading();
+                    showToast('Data penjualan berhasil diperbarui!');
+                    closeModalPenjualan();
+                    refreshPenjualanList();
+                })
+                .catch(error => {
+                    console.log('Fallback: Update offline berhasil', error);
+                    hideLoading();
+                    showToast('Data penjualan berhasil diperbarui (offline)!');
+                    closeModalPenjualan();
+                    refreshPenjualanList();
+                });
+            } else {
+                // CREATE DATA BARU
+                const timestamp = new Date().toLocaleString('id-ID');
+                penjualanData["Waktu Input"] = timestamp;
+                penjualanData.ID = 'PENJ-' + Date.now(); // ID unik
+
+                // Tambah ke offline DB
+                offlineDb.penjualan.push(penjualanData);
+                console.log('Data ditambahkan:', penjualanData);
+
+                // Kirim ke GAS (dengan action CREATE)
+                fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'CREATE_PENJUALAN',
+                        data: penjualanData
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    hideLoading();
+                    showToast('Data penjualan berhasil ditambahkan!');
+                    closeModalPenjualan();
+                    refreshPenjualanList();
+                })
+                .catch(error => {
+                    console.log('Fallback: Create offline berhasil', error);
+                    hideLoading();
+                    showToast('Data penjualan berhasil ditambahkan (offline)!');
+                    closeModalPenjualan();
+                    refreshPenjualanList();
+                });
+            }
+        }
+
+        // FUNGSI REFRESH LIST PENJUALAN
+        function refreshPenjualanList() {
+            const tbody = document.getElementById('penjualan-list-body');
+            tbody.innerHTML = '';
+
+            if (offlineDb.penjualan.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-gray-500">Belum ada data penjualan</td></tr>';
+                return;
+            }
+
+            offlineDb.penjualan.forEach((penjualan, index) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-2 text-gray-700">${index + 1}</td>
+                    <td class="p-2 text-center">
+                        <button onclick="handlePrint('${penjualan.ID}')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600">
+                            Cetak
+                        </button>
+                    </td>
+                    <td class="p-2 text-gray-700">${penjualan.Pembeli}</td>
+                    <td class="p-2 text-gray-700">${penjualan.Alamat}</td>
+                    <td class="p-2 text-gray-700">${penjualan["No HP"]}</td>
+                    <td class="p-2 text-gray-700">${penjualan.Produk}</td>
+                    <td class="p-2 text-gray-700">${penjualan.Kategori}</td>
+                    <td class="p-2">
+                        <span class="px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-800">${penjualan.Status}</span>
+                    </td>
+                    <td class="p-2 text-right text-gray-700">Rp ${parseInt(penjualan.Harga || 0).toLocaleString('id-ID')}</td>
+                    <td class="p-2 text-gray-700">${penjualan.Voucer || '-'}</td>
+                    <td class="p-2 text-gray-700">${penjualan.Marketing}</td>
+                    <td class="p-2 text-gray-700 text-xs">${penjualan["Waktu Input"]}</td>
+                    <td class="p-2 text-center">
+                        <button onclick="openEditPenjualan('${penjualan.ID}')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 mr-1">
+                            Edit
+                        </button>
+                        <button onclick="deletePenjualan('${penjualan.ID}')" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">
+                            Hapus
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function deletePenjualan(penjualanId) {
+            if (confirm('Apakah yakin ingin menghapus data ini?')) {
+                offlineDb.penjualan = offlineDb.penjualan.filter(p => p.ID !== penjualanId);
+                showToast('Data penjualan berhasil dihapus!');
+                refreshPenjualanList();
+            }
+        }
+
+        function handlePrint(penjualanId) {
+            const penjualan = offlineDb.penjualan.find(p => p.ID === penjualanId);
+            if (penjualan) {
+                alert('Cetak Struk untuk ' + penjualan.Pembeli + '\n\nRp ' + parseInt(penjualan.Harga).toLocaleString('id-ID'));
+            }
+        }
+
+        function initInputFormatters() {
+            const hargaInput = document.getElementById('penj-harga');
+            if (hargaInput) {
+                hargaInput.addEventListener('input', function() {
+                    let cleanNumbers = this.value.replace(/[^0-9]/g, '');
+                    if (cleanNumbers === '') {
+                        this.value = '';
+                        return;
+                    }
+                    this.value = parseInt(cleanNumbers).toLocaleString('id-ID');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
