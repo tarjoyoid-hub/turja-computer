@@ -30,7 +30,7 @@
          GANTI URL DI BAWAH INI DENGAN URL WEB APP GAS ANDA
          ========================================== -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxVRttVODZ3HxfgK99UnHjLhvWI4yXKw8-S7E4t5tx_VSnLEMeKw5qZTNrX5bPuDKCGnw/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzUNmfqcEzmmX0XAYCi2Yga0Icf9QgH9FKR9OpHvTt5tmHY2Y2aZZgZ7YoeAZJRIfbL/exec"; 
     </script>
 
     <!-- LOADING OVERLAY -->
@@ -149,7 +149,7 @@
                         <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Unit Penjualan</span>
                         <div class="flex items-baseline justify-between mt-2">
                             <span class="text-3xl font-extrabold text-indigo-900" id="dash-penjualan-count">0</span>
-                            <span class="text-xs text-emerald-600 font-semibold">Transaksi</span>
+                            <span class="text-xs text-indigo-600 font-semibold">Transaksi</span>
                         </div>
                     </div>
                     <div class="bg-emerald-50 p-5 rounded-xl shadow-sm border-b-4 border-emerald-500 flex flex-col justify-between">
@@ -252,6 +252,7 @@
                                 <th class="p-2 text-right text-green-900 font-semibold">Harga Final</th>
                                 <th class="p-2 text-green-900 font-semibold">Voucer</th>
                                 <th class="p-2 text-green-900 font-semibold">Marketing</th>
+                                <th class="p-2 text-green-900 font-semibold">Waktu Input</th>
                                 <th class="p-2 text-center text-green-900 font-semibold">Aksi</th>
                             </tr>
                         </thead>
@@ -315,6 +316,7 @@
                     </button>
                 </div>
 
+                <!-- Akses Menu User -->
                 <div class="max-w-md">
                     <h3 class="text-base font-semibold mb-3 text-gray-800">Akses Menu User</h3>
                     <form>
@@ -560,7 +562,7 @@
     </div>
 
     <!-- MODAL EDIT MARKETING -->
-    <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex items-center justify-center p-4">
+    <div id="modal-edit-marketing" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-50 hidden flex justify-center items-center p-4">
         <div class="bg-white p-6 rounded-lg shadow-2xl w-full max-w-md border-t-4 border-green-700">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Edit Akun Marketing</h2>
             <form id="form-edit-marketing" onsubmit="submitEditMarketing(event)">
@@ -612,7 +614,7 @@
                     Batal
                 </button>
                 <button onclick="executeClaim()" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition text-sm font-semibold">
-                    Ya, Klaim
+                    Klaim
                 </button>
             </div>
         </div>
@@ -677,7 +679,7 @@
                 <button onclick="closeDeleteConfirm()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition text-sm font-semibold">
                     Batal
                 </button>
-                <button onclick="executeDeletePenj()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-semibold">
+                <button onclick="executeDeletePenj()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-xs font-bold p-1">
                     Ya, Hapus
                 </button>
             </div>
@@ -2230,7 +2232,7 @@
             drawAndDownloadVoucher(activeVoucherData.kode, activeVoucherData.pelanggan, activeVoucherData.nowa, activeVoucherData.desa, activeVoucherData.kecamatan, activeVoucherData.tanggal);
         }
 
-        // FUNGSI MEMBUAT KODE VOUCER ACAK (DIKEMBALIKAN KE TEMPAT SEMULA)
+        // FUNGSI MEMBUAT KODE VOUCER ACAK
         function generateRandomCode() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let result = '';
